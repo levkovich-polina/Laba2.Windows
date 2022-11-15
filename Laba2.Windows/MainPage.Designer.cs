@@ -1,6 +1,6 @@
 ﻿namespace Laba2.Windows
 {
-    partial class Form1
+    partial class MainPage
     {
         /// <summary>
         ///  Required designer variable.
@@ -33,23 +33,27 @@
             this.BackgroundStyleButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.RandomFunctionButton = new System.Windows.Forms.Button();
-            this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.colorDialog2 = new System.Windows.Forms.ColorDialog();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.Color.LightCyan;
             this.groupBox1.Controls.Add(this.GraphColorButton);
             this.groupBox1.Controls.Add(this.BackgroundStyleButton);
             this.groupBox1.Controls.Add(this.SaveButton);
             this.groupBox1.Controls.Add(this.RandomFunctionButton);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.groupBox1.Location = new System.Drawing.Point(550, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(250, 450);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // GraphColorButton
             // 
@@ -89,15 +93,25 @@
             this.RandomFunctionButton.TabIndex = 0;
             this.RandomFunctionButton.Text = "random function";
             this.RandomFunctionButton.UseVisualStyleBackColor = true;
+            this.RandomFunctionButton.Click += new System.EventHandler(this.RandomFunctionButton_Click);
             // 
-            // Form1
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(-3, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(554, 450);
+            this.panel1.TabIndex = 1;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // MainPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MainPage";
+            this.Text = "MainPage";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -111,6 +125,8 @@
         private Button RandomFunctionButton;
         private Button GraphColorButton;
         private Button BackgroundStyleButton;
-        private ColorDialog colorDialog;
+        private ColorDialog colorDialog1;
+        private ColorDialog colorDialog2;
+        private Panel panel1;
     }
 }
