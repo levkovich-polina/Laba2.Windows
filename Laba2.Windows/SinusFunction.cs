@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Laba2.Windows
 {
-    class _2X_5 : IFunction
+    class SinusFunction : IFunction
     {
-        public double calc(double x)
+        public double Calc(double x)
         {
-            return 2 * x + 5;
+            return Math.Sin(x);
         }
     }
 }

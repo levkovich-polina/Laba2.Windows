@@ -1,6 +1,6 @@
 ﻿namespace Laba2.Windows
 {
-    partial class MainPage
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,21 +29,22 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ChoiceComboBox = new System.Windows.Forms.ComboBox();
             this.GraphColorButton = new System.Windows.Forms.Button();
-            this.BackgroundStyleButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.RandomFunctionButton = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.colorDialog2 = new System.Windows.Forms.ColorDialog();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.GraphicColor = new System.Windows.Forms.ColorDialog();
+            this.BackgroundColor = new System.Windows.Forms.ColorDialog();
+            this.CoordinateAxes = new System.Windows.Forms.Panel();
+            this.GradientColor = new System.Windows.Forms.ColorDialog();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.LightCyan;
+            this.groupBox1.Controls.Add(this.ChoiceComboBox);
             this.groupBox1.Controls.Add(this.GraphColorButton);
-            this.groupBox1.Controls.Add(this.BackgroundStyleButton);
             this.groupBox1.Controls.Add(this.SaveButton);
             this.groupBox1.Controls.Add(this.RandomFunctionButton);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
@@ -53,7 +54,21 @@
             this.groupBox1.Size = new System.Drawing.Size(250, 450);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // ChoiceComboBox
+            // 
+            this.ChoiceComboBox.FormattingEnabled = true;
+            this.ChoiceComboBox.Items.AddRange(new object[] {
+            "Background color",
+            "Gradient",
+            "Vertical hatching",
+            "Horizontal hatching",
+            "Photography"});
+            this.ChoiceComboBox.Location = new System.Drawing.Point(34, 198);
+            this.ChoiceComboBox.Name = "ChoiceComboBox";
+            this.ChoiceComboBox.Size = new System.Drawing.Size(166, 28);
+            this.ChoiceComboBox.TabIndex = 4;
+            this.ChoiceComboBox.SelectedIndexChanged += new System.EventHandler(this.ChoiceComboBox_SelectedIndexChanged);
             // 
             // GraphColorButton
             // 
@@ -64,16 +79,6 @@
             this.GraphColorButton.Text = "graph сolor";
             this.GraphColorButton.UseVisualStyleBackColor = true;
             this.GraphColorButton.Click += new System.EventHandler(this.GraphColorButton_Click);
-            // 
-            // BackgroundStyleButton
-            // 
-            this.BackgroundStyleButton.Location = new System.Drawing.Point(31, 191);
-            this.BackgroundStyleButton.Name = "BackgroundStyleButton";
-            this.BackgroundStyleButton.Size = new System.Drawing.Size(169, 29);
-            this.BackgroundStyleButton.TabIndex = 2;
-            this.BackgroundStyleButton.Text = "background style";
-            this.BackgroundStyleButton.UseVisualStyleBackColor = true;
-            this.BackgroundStyleButton.Click += new System.EventHandler(this.BackgroundStyleButton_Click);
             // 
             // SaveButton
             // 
@@ -95,23 +100,23 @@
             this.RandomFunctionButton.UseVisualStyleBackColor = true;
             this.RandomFunctionButton.Click += new System.EventHandler(this.RandomFunctionButton_Click);
             // 
-            // panel1
+            // CoordinateAxes
             // 
-            this.panel1.Location = new System.Drawing.Point(-3, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(554, 450);
-            this.panel1.TabIndex = 1;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            this.CoordinateAxes.Location = new System.Drawing.Point(-3, 0);
+            this.CoordinateAxes.Name = "CoordinateAxes";
+            this.CoordinateAxes.Size = new System.Drawing.Size(554, 450);
+            this.CoordinateAxes.TabIndex = 1;
+            this.CoordinateAxes.Paint += new System.Windows.Forms.PaintEventHandler(this.CoordinateAxes_Paint);
             // 
-            // MainPage
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.CoordinateAxes);
             this.Controls.Add(this.groupBox1);
-            this.Name = "MainPage";
-            this.Text = "MainPage";
+            this.Name = "MainForm";
+            this.Text = "MainForm";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -124,9 +129,10 @@
         private Button SaveButton;
         private Button RandomFunctionButton;
         private Button GraphColorButton;
-        private Button BackgroundStyleButton;
-        private ColorDialog colorDialog1;
-        private ColorDialog colorDialog2;
-        private Panel panel1;
+        private ColorDialog GraphicColor;
+        private ColorDialog BackgroundColor;
+        private Panel CoordinateAxes;
+        private ComboBox ChoiceComboBox;
+        private ColorDialog GradientColor;
     }
 }

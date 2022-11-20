@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Laba2.Windows
 {
-    class X_3 : IFunction
+    class QuadraticFunction : IFunction
     {
-        public double calc(double x)
+        public double Calc(double x)
         {
-            return x * x * x;
+            return x * x;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace Laba2.Windows
 {
     internal interface IFunction
     {
-        double calc(double x);
+        double Calc(double x);
     }
 }
