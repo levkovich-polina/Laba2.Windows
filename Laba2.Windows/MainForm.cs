@@ -13,8 +13,6 @@ namespace Laba2.Windows
     {
         IFunction function;
         public readonly ChartDrawer _chartDrawer;
-        private const int PixelCountOnAxle = 25;
-        private const int ArrowLength = 10;
 
         private float SCALE = 1F;
         private float startX = 0F;
@@ -24,11 +22,10 @@ namespace Laba2.Windows
         private float moveByX = 0;
         private float moveByY = 0;
 
-        public MainForm(ChartDrawer chartDrawer)
+        public MainForm()
         {
-            _chartDrawer = chartDrawer;
-            _chartDrawer._panel+=_ch
             InitializeComponent();
+            _chartDrawer = new ChartDrawer(CoordAxes);
             this.MouseWheel += new MouseEventHandler(CoordAxes_MouseWheel);
         }
 
@@ -156,11 +153,6 @@ namespace Laba2.Windows
             {
                 CoordAxes.BackgroundImage = Image.FromFile("1612726633_168-p-krasivie-golubie-foni-neba-222.jpg");
             }
-        }
-
-        private void CoordAxes_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void CoordAxes_MouseDown(object sender, MouseEventArgs e)

@@ -36,6 +36,7 @@
             this.GraphicColor = new System.Windows.Forms.ColorDialog();
             this.BackgroundColor = new System.Windows.Forms.ColorDialog();
             this.CoordAxes = new System.Windows.Forms.Panel();
+            this.GraphicsLabel = new System.Windows.Forms.Label();
             this.ScaleLabel = new System.Windows.Forms.Label();
             this.GradientColor = new System.Windows.Forms.ColorDialog();
             this.groupBox1.SuspendLayout();
@@ -100,19 +101,27 @@
             this.RandomFunctionButton.TabIndex = 0;
             this.RandomFunctionButton.Text = "random function";
             this.RandomFunctionButton.UseVisualStyleBackColor = true;
-          
             // 
             // CoordAxes
             // 
+            this.CoordAxes.Controls.Add(this.GraphicsLabel);
             this.CoordAxes.Controls.Add(this.ScaleLabel);
             this.CoordAxes.Location = new System.Drawing.Point(-3, 0);
             this.CoordAxes.Name = "CoordAxes";
             this.CoordAxes.Size = new System.Drawing.Size(554, 450);
             this.CoordAxes.TabIndex = 1;
-            this.CoordAxes.Paint += new System.Windows.Forms.PaintEventHandler(this.CoordAxes_Paint);
             this.CoordAxes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseDown);
             this.CoordAxes.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseMove);
             this.CoordAxes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseUp);
+            // 
+            // GraphicsLabel
+            // 
+            this.GraphicsLabel.AutoSize = true;
+            this.GraphicsLabel.Location = new System.Drawing.Point(418, 412);
+            this.GraphicsLabel.Name = "GraphicsLabel";
+            this.GraphicsLabel.Size = new System.Drawing.Size(66, 20);
+            this.GraphicsLabel.TabIndex = 1;
+            this.GraphicsLabel.Text = "Graphics";
             // 
             // ScaleLabel
             // 
@@ -151,5 +160,6 @@
         private ComboBox ChoiceComboBox;
         private ColorDialog GradientColor;
         private Label ScaleLabel;
+        private Label GraphicsLabel;
     }
 }
