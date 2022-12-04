@@ -35,9 +35,11 @@
             this.RandomFunctionButton = new System.Windows.Forms.Button();
             this.GraphicColor = new System.Windows.Forms.ColorDialog();
             this.BackgroundColor = new System.Windows.Forms.ColorDialog();
-            this.CoordinateAxes = new System.Windows.Forms.Panel();
+            this.CoordAxes = new System.Windows.Forms.Panel();
+            this.ScaleLabel = new System.Windows.Forms.Label();
             this.GradientColor = new System.Windows.Forms.ColorDialog();
             this.groupBox1.SuspendLayout();
+            this.CoordAxes.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -98,27 +100,41 @@
             this.RandomFunctionButton.TabIndex = 0;
             this.RandomFunctionButton.Text = "random function";
             this.RandomFunctionButton.UseVisualStyleBackColor = true;
-            this.RandomFunctionButton.Click += new System.EventHandler(this.RandomFunctionButton_Click);
+          
             // 
-            // CoordinateAxes
+            // CoordAxes
             // 
-            this.CoordinateAxes.Location = new System.Drawing.Point(-3, 0);
-            this.CoordinateAxes.Name = "CoordinateAxes";
-            this.CoordinateAxes.Size = new System.Drawing.Size(554, 450);
-            this.CoordinateAxes.TabIndex = 1;
-            this.CoordinateAxes.Paint += new System.Windows.Forms.PaintEventHandler(this.CoordinateAxes_Paint);
+            this.CoordAxes.Controls.Add(this.ScaleLabel);
+            this.CoordAxes.Location = new System.Drawing.Point(-3, 0);
+            this.CoordAxes.Name = "CoordAxes";
+            this.CoordAxes.Size = new System.Drawing.Size(554, 450);
+            this.CoordAxes.TabIndex = 1;
+            this.CoordAxes.Paint += new System.Windows.Forms.PaintEventHandler(this.CoordAxes_Paint);
+            this.CoordAxes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseDown);
+            this.CoordAxes.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseMove);
+            this.CoordAxes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseUp);
+            // 
+            // ScaleLabel
+            // 
+            this.ScaleLabel.AutoSize = true;
+            this.ScaleLabel.Location = new System.Drawing.Point(446, 14);
+            this.ScaleLabel.Name = "ScaleLabel";
+            this.ScaleLabel.Size = new System.Drawing.Size(42, 20);
+            this.ScaleLabel.TabIndex = 0;
+            this.ScaleLabel.Text = "scale";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.CoordinateAxes);
+            this.Controls.Add(this.CoordAxes);
             this.Controls.Add(this.groupBox1);
             this.Name = "MainForm";
             this.Text = "MainForm";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
+            this.CoordAxes.ResumeLayout(false);
+            this.CoordAxes.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -131,8 +147,9 @@
         private Button GraphColorButton;
         private ColorDialog GraphicColor;
         private ColorDialog BackgroundColor;
-        private Panel CoordinateAxes;
+        private Panel CoordAxes;
         private ComboBox ChoiceComboBox;
         private ColorDialog GradientColor;
+        private Label ScaleLabel;
     }
 }
