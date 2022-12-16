@@ -36,11 +36,11 @@
             this.ScaleLabel = new System.Windows.Forms.Label();
             this.GraphicColor = new System.Windows.Forms.ColorDialog();
             this.BackgroundColor = new System.Windows.Forms.ColorDialog();
-            this.CoordAxes = new System.Windows.Forms.Panel();
+            this.DrawingPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.GradientColor = new System.Windows.Forms.ColorDialog();
             this.GroupBox.SuspendLayout();
-            this.CoordAxes.SuspendLayout();
+            this.DrawingPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // GroupBox
@@ -72,6 +72,7 @@
             this.ChoiceComboBox.Name = "ChoiceComboBox";
             this.ChoiceComboBox.Size = new System.Drawing.Size(166, 28);
             this.ChoiceComboBox.TabIndex = 4;
+            this.ChoiceComboBox.SelectedIndexChanged += new System.EventHandler(this.ChoiceComboBox_SelectedIndexChanged);
             // 
             // GraphColorButton
             // 
@@ -114,22 +115,21 @@
             this.ScaleLabel.TabIndex = 0;
             this.ScaleLabel.Text = "scale";
             // 
-            // CoordAxes
+            // DrawingPanel
             // 
-            this.CoordAxes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.DrawingPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CoordAxes.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.CoordAxes.Controls.Add(this.label1);
-            this.CoordAxes.Controls.Add(this.ScaleLabel);
-            this.CoordAxes.Location = new System.Drawing.Point(-3, 0);
-            this.CoordAxes.Name = "CoordAxes";
-            this.CoordAxes.Size = new System.Drawing.Size(557, 450);
-            this.CoordAxes.TabIndex = 1;
-            this.CoordAxes.Paint += new System.Windows.Forms.PaintEventHandler(this.CoordAxes_Paint);
-            this.CoordAxes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseDown);
-            this.CoordAxes.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseMove);
-            this.CoordAxes.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseUp);
+            this.DrawingPanel.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.DrawingPanel.Controls.Add(this.label1);
+            this.DrawingPanel.Controls.Add(this.ScaleLabel);
+            this.DrawingPanel.Location = new System.Drawing.Point(-3, 0);
+            this.DrawingPanel.Name = "DrawingPanel";
+            this.DrawingPanel.Size = new System.Drawing.Size(557, 450);
+            this.DrawingPanel.TabIndex = 1;
+            this.DrawingPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseDown);
+            this.DrawingPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseMove);
+            this.DrawingPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseUp);
             // 
             // label1
             // 
@@ -145,13 +145,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.CoordAxes);
+            this.Controls.Add(this.DrawingPanel);
             this.Controls.Add(this.GroupBox);
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.GroupBox.ResumeLayout(false);
-            this.CoordAxes.ResumeLayout(false);
-            this.CoordAxes.PerformLayout();
+            this.DrawingPanel.ResumeLayout(false);
+            this.DrawingPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -164,7 +165,7 @@
         private Button GraphColorButton;
         private ColorDialog GraphicColor;
         private ColorDialog BackgroundColor;
-        private Panel CoordAxes;
+        private Panel DrawingPanel;
         private ComboBox ChoiceComboBox;
         private ColorDialog GradientColor;
         private Label ScaleLabel;

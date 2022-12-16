@@ -12,6 +12,8 @@ namespace Laba2.Windows
         private const int PixelCountOnAxle = 20;
         private const int ArrowLength = 10;
         private readonly Panel _panel;
+        private Color _graphicsColor;
+        private IBackgroundDrawer _backgroundDrawer;
 
         public ChartDrawer(Panel panel)
         {
@@ -21,13 +23,15 @@ namespace Laba2.Windows
                null, _panel, new object[] { true }); ;
         }
         public double Zoom = 1;
-        
+
 
         private void _panel_Paint(object? sender, PaintEventArgs e)
         {
             int pCenterX = _panel.ClientSize.Width / 2 + _pShiftX;
             int pCenterY = _panel.Size.Height / 2 + _pShiftY;
             Graphics graphic = e.Graphics;
+            //e.Graphics.Clear(Color.Transparent);
+            DrawBackground(graphic);
             //Смещение начала координат в центр PictureBox
             e.Graphics.TranslateTransform(pCenterX, pCenterY);
             DrawXAxis(e.Graphics);
@@ -38,16 +42,25 @@ namespace Laba2.Windows
             {
                 DrawGraphics(graphic);
             }
+
         }
+        private void DrawBackground(Graphics graphics)
+        {
+            if (_backgroundDrawer != null)
+            {
+                _backgroundDrawer.Draw(graphics, _panel.Size.Height, _panel.Size.Width);
+            }
+        }
+        
 
         public void DrawXAxis(Graphics g)
         {
-            int pxMax =  _panel.Size.Width/2 - _pShiftX;
+            int pxMax = _panel.Size.Width / 2 - _pShiftX;
             int pxMin = pxMax - _panel.ClientSize.Width;
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                int px =(int)( i * Zoom * PixelCountOnAxle);
+                int px = (int)(i * Zoom * PixelCountOnAxle);
 
                 g.DrawLine(Pens.Black, (int)px, -3, (int)px, 3);
                 DrawText(new Point((int)px, 3), (i).ToString(), g);
@@ -67,8 +80,8 @@ namespace Laba2.Windows
                     break;
                 }
             }
-            var start = new Point(pxMin,0);
-            var end = new Point(pxMax,0);
+            var start = new Point(pxMin, 0);
+            var end = new Point(pxMax, 0);
             //Ось     
             g.DrawLine(Pens.Black, start, end);
             //Стрелка
@@ -77,8 +90,8 @@ namespace Laba2.Windows
         //Рисование оси Y
         public void DrawYAxis(Graphics g)
         {
-            int pyMax = _panel.Size.Height/2 - _pShiftY;
-            int pyMin = pyMax -_panel.ClientSize.Height;
+            int pyMax = _panel.Size.Height / 2 - _pShiftY;
+            int pyMin = pyMax - _panel.ClientSize.Height;
             //Деления в отрицательном направлении оси
             for (int i = -1; true; i--)
             {
@@ -93,7 +106,7 @@ namespace Laba2.Windows
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                int py =(int)( i * Zoom * PixelCountOnAxle);
+                int py = (int)(i * Zoom * PixelCountOnAxle);
                 g.DrawLine(Pens.Black, -3, (int)py, 3, (int)py);
                 DrawText(new Point(3, (int)py), (i).ToString(), g, true);
                 if (py > pyMax)
@@ -142,9 +155,9 @@ namespace Laba2.Windows
             _function = function;
             _panel.Invalidate();
         }
-        public void DrawGraphics(Graphics graphic)
+        private void DrawGraphics(Graphics graphic)
         {
-            Pen graphicsPen = new Pen(Color.Red);
+            Pen graphicsPen = new Pen(_graphicsColor);
 
             int pxMax = _panel.Size.Width / 2 - _pShiftX;
             int pxMin = pxMax - _panel.ClientSize.Width;
@@ -152,7 +165,7 @@ namespace Laba2.Windows
             int pyMin = pyMax - _panel.ClientSize.Height;
             double fxMax = pxMax / PixelCountOnAxle / Zoom;
             double fxMin = pxMin / PixelCountOnAxle / Zoom;
-            var step = ((fxMax - fxMin) / _panel.Size.Width)/100;
+            var step = ((fxMax - fxMin) / _panel.Size.Width) / 100;
 
             for (double fx = fxMin; fx < fxMax; fx += step)
             {
@@ -172,17 +185,22 @@ namespace Laba2.Windows
                 }
             }
         }
+        public void SetGraphicsColor(Color color)
+        {
+            _graphicsColor = color;
+            _panel.Invalidate();
+        }
         public void ZoomIn()
         {
             Zoom *= _zoomFactor;
-            _pShiftX = (int)(_pShiftX *_zoomFactor);
+            _pShiftX = (int)(_pShiftX * _zoomFactor);
             _pShiftY = (int)(_pShiftY * _zoomFactor);
             _panel.Invalidate();
 
         }
         public void ZoomOut()
         {
-            Zoom /=_zoomFactor;
+            Zoom /= _zoomFactor;
             _pShiftX = (int)(_pShiftX / _zoomFactor);
             _pShiftY = (int)(_pShiftY / _zoomFactor);
             _panel.Invalidate();
@@ -193,6 +211,12 @@ namespace Laba2.Windows
             _pShiftX += pShift.X;
             _pShiftY += pShift.Y;
             Debug.WriteLine($"shift=({_pShiftX};{_pShiftY})");
+            _panel.Invalidate();
+        }
+
+        public void SetBackgroundDrawer(IBackgroundDrawer backgroundDrawer)
+        {
+            _backgroundDrawer = backgroundDrawer;
             _panel.Invalidate();
         }
     }
