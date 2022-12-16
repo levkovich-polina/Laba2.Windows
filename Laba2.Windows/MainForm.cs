@@ -1,6 +1,8 @@
+using Microsoft.VisualBasic.Devices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Numerics;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
@@ -16,8 +18,7 @@ namespace Laba2.Windows
     public partial class MainForm : Form
     {
         IFunction function;
-        public readonly ChartDrawer _chartDrawer;
-        private bool MOUSE_DOWN = false;        
+        public readonly ChartDrawer _chartDrawer;       
         private  int PixelCountOnAxle = 20;
         public MainForm()
         {
@@ -79,42 +80,41 @@ namespace Laba2.Windows
                 ScaleLabel.Text = null;
             }
         }
-        int startX = 0;
-        int startY = 0;
+        private Point? _previousMouseLocation;
         private void CoordAxes_MouseDown(object sender, MouseEventArgs e)
         {
             // При нажатии на левую кнопку мыши
             if (e.Button == MouseButtons.Left)
             {
-                MOUSE_DOWN = true;
-                startX = (CoordAxes.Size.Width / 2)/ PixelCountOnAxle;
-                startY = (CoordAxes.Size.Height / 2) / PixelCountOnAxle;
-            }
-            else
-            {
-                MOUSE_DOWN = false;
-            }
+                CoordAxes.Capture = true;
+               
+            }           
         }
         private void CoordAxes_MouseUp(object sender, MouseEventArgs e)
         {
             // При отпускании кнопки
             if (e.Button == MouseButtons.Left)
             {
-                MOUSE_DOWN = false;               
+                CoordAxes.Capture = false;
+                _previousMouseLocation = null;
             }
         }
-        int moveByX = 0;
-        int moveByY = 0;
+       
         private void CoordAxes_MouseMove(object sender, MouseEventArgs e)
         {
             // Двигается график при перемешение мыши
-            if (MOUSE_DOWN)
+            if (CoordAxes.Capture)
             {
-                moveByX = e.X / PixelCountOnAxle - startX;
-                moveByY = e.Y / PixelCountOnAxle - startY;
-                startX = (CoordAxes.Size.Width / 2) / PixelCountOnAxle;
-                startY = (CoordAxes.Size.Height / 2) / PixelCountOnAxle;
-                CoordAxes.Invalidate();
+                if (_previousMouseLocation != null)
+                {
+                    var mouseShift = new Point()
+                    {
+                        X = e.Location.X - _previousMouseLocation.Value.X,
+                        Y= e.Location.Y - _previousMouseLocation.Value.Y,
+                    };
+                    _chartDrawer.MakeShift(mouseShift);
+                }
+                _previousMouseLocation = e.Location;
             }
         }
         private void RandomFunctionButton_Click(object sender, EventArgs e)
