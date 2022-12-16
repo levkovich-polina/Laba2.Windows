@@ -69,16 +69,7 @@ namespace Laba2.Windows
             {
                 _chartDrawer.ZoomOut();
 
-                //if (_chartDrawer._zoom <= 1)
-                //{
-                //    PixelCountOnAxle = 1;
-                //    ScaleLabel.Visible = false;
-                //}
-                //else
-                //{
-                //    ScaleLabel.Visible = true;
-                //    ScaleLabel.Text = "scale = " + PixelCountOnAxle.ToString();
-                //}
+                
             }
         }
         int startX = 0;
@@ -89,9 +80,8 @@ namespace Laba2.Windows
             if (e.Button == MouseButtons.Left)
             {
                 MOUSE_DOWN = true;
-                startX = e.X/PixelCountOnAxle;
-                startY = e.Y/PixelCountOnAxle;
-                CoordAxes.Focus();
+                startX = (CoordAxes.Size.Width / 2)/ PixelCountOnAxle;
+                startY = (CoordAxes.Size.Height / 2) / PixelCountOnAxle;
             }
             else
             {
@@ -106,17 +96,17 @@ namespace Laba2.Windows
                 MOUSE_DOWN = false;               
             }
         }
+        int moveByX = 0;
+        int moveByY = 0;
         private void CoordAxes_MouseMove(object sender, MouseEventArgs e)
         {
             // Двигается график при перемешение мыши
             if (MOUSE_DOWN)
             {
-                int moveByX = (CoordAxes.Size.Width / 2) / PixelCountOnAxle;
-                int moveByY = (CoordAxes.Size.Height / 2) / PixelCountOnAxle;
-                moveByX = moveByX - startX;
-                moveByY = moveByY - startY;
-                startX = e.X/PixelCountOnAxle;
-                startY = e.Y/PixelCountOnAxle;
+                moveByX = e.X / PixelCountOnAxle - startX;
+                moveByY = e.Y / PixelCountOnAxle - startY;
+                startX = (CoordAxes.Size.Width / 2) / PixelCountOnAxle;
+                startY = (CoordAxes.Size.Height / 2) / PixelCountOnAxle;
                 CoordAxes.Invalidate();
             }
         }
@@ -163,6 +153,8 @@ namespace Laba2.Windows
         {
             int width = CoordAxes.ClientSize.Width / 2;
             int height = CoordAxes.ClientSize.Height / 2;
+            int w = CoordAxes.ClientSize.Width;
+            int h = CoordAxes.ClientSize.Height;
             int choice = ChoiceComboBox.SelectedIndex;
             var stepScale = PixelCountOnAxle;
             Graphics graphic = e.Graphics;
@@ -175,16 +167,13 @@ namespace Laba2.Windows
                 }
             }
             else if (choice == 1) //градиент
-            {
-                var firstColor = GradientColor.Color;
-                if (GradientColor.ShowDialog() == DialogResult.OK)
-                {
-                    Color1 = firstColor;
-                    Color2 = GradientColor.Color;
-                    LinearGradientBrush brush = new LinearGradientBrush(new Point(0, 0), new Point(width * 2, height * 2), Color1, Color2);
-                    graphic.Clear(DefaultBackColor);
-                    graphic.FillRectangle(brush, CoordAxes.ClientRectangle);
-                }
+            {               
+                   LinearGradientBrush linGrBrush = new LinearGradientBrush(
+                   new Point(0, 0),
+                   new Point(w, h),
+                   Color.Blue,
+                   Color.Red);
+                   graphic.FillRectangle(linGrBrush, 0, 0, w, h);                                 
             }
             else if (choice == 2) // штриховка
             {

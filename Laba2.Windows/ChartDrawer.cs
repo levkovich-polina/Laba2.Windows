@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Reflection;
+using System.Xml.Schema;
 
 namespace Laba2.Windows
 {
@@ -27,11 +19,11 @@ namespace Laba2.Windows
             _panel = panel;
             _panel.Paint += _panel_Paint;
             typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
-               null, _panel, new object[] { true }); ;  // Double buffer for graphic
+               null, _panel, new object[] { true }); ;
         }
         private void _panel_Paint(object? sender, PaintEventArgs e)
         {
-            int w = _panel.ClientSize.Width/ 2;
+            int w = _panel.ClientSize.Width / 2;
             int h = _panel.Size.Height / 2;
             Graphics graphic = e.Graphics;
             //Смещение начала координат в центр PictureBox
@@ -40,35 +32,36 @@ namespace Laba2.Windows
             DrawYAxis(new Point(0, h), new Point(0, -h), e.Graphics);
             //Центр координат
             e.Graphics.FillEllipse(Brushes.Red, -2, -2, 4, 4);
-            //Рисование оси X
-            if(_function!=null)
+            if (_function != null)
             {
                 DrawGraphics(graphic);
             }
         }
-        private double displacement;
+
         public void DrawXAxis(Point start, Point end, Graphics g)
         {
-            int w = _panel.ClientSize.Width / 2;       
-            double X= (_panel.Size.Width / 2) / PixelCountOnAxle;         
+
+            double xMax = _panel.ClientSize.Width / 2;
+            double xMin = -_panel.ClientSize.Width / 2;
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                displacement = i *_zoom * PixelCountOnAxle + w;
-                g.DrawLine(Pens.Black, i*PixelCountOnAxle, -3, i * PixelCountOnAxle, 3);
-                DrawText(new Point(i * PixelCountOnAxle, 3), (i * PixelCountOnAxle / PixelCountOnAxle).ToString(), g);
-                if (i > X)
+                double x = i * _zoom * PixelCountOnAxle;
+
+                g.DrawLine(Pens.Black, (int)x, -3, (int)x, 3);
+                DrawText(new Point((int)x, 3), (i).ToString(), g);
+                if (x > xMax)
                 {
                     break;
                 }
             }
             //Деления в отрицательном направлении оси
-            for (int i = 1; true; i++)
+            for (int i = -1; true; i--)
             {
-                displacement = i * _zoom * PixelCountOnAxle + w;
-                g.DrawLine(Pens.Black, i * -PixelCountOnAxle, -3, i * -PixelCountOnAxle, 3);
-                DrawText(new Point(i * -PixelCountOnAxle, 3), (-i * -PixelCountOnAxle / PixelCountOnAxle).ToString(), g);
-                if (i > X)
+                double x = i * _zoom * PixelCountOnAxle;
+                g.DrawLine(Pens.Black, (int)x, -3, (int)x, 3);
+                DrawText(new Point((int)x, 3), (i).ToString(), g);
+                if (x < xMin)
                 {
                     break;
                 }
@@ -81,15 +74,15 @@ namespace Laba2.Windows
         //Рисование оси Y
         public void DrawYAxis(Point start, Point end, Graphics g)
         {
-            int h = _panel.Size.Height / 2;
-            double Y = (_panel.Size.Height / 2) / PixelCountOnAxle;
+            double yMax = _panel.ClientSize.Height / 2;
+            double yMin = -_panel.ClientSize.Height / 2;
             //Деления в отрицательном направлении оси
-            for (int i = 1; true; i++)
+            for (int i = -1; true; i--)
             {
-                displacement = i  * _zoom * PixelCountOnAxle + h;
-                g.DrawLine(Pens.Black, -3, i * PixelCountOnAxle, 3, i * PixelCountOnAxle);
-                DrawText(new Point(3, i * PixelCountOnAxle), (i * PixelCountOnAxle / PixelCountOnAxle).ToString(), g, true);
-                if (i > Y)
+                double y = i * _zoom * PixelCountOnAxle;
+                g.DrawLine(Pens.Black, -3, (int)y, 3, (int)y);
+                DrawText(new Point(3, (int)y), (i).ToString(), g, true);
+                if (y < yMin)
                 {
                     break;
                 }
@@ -97,10 +90,10 @@ namespace Laba2.Windows
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                displacement = i * _zoom * PixelCountOnAxle + h;
-                g.DrawLine(Pens.Black, -3, i * -PixelCountOnAxle, 3, i * -PixelCountOnAxle);
-                DrawText(new Point(3, i * -PixelCountOnAxle), (-i * -PixelCountOnAxle / PixelCountOnAxle).ToString(), g, true);
-                if (i > Y)
+                double y = i * _zoom * PixelCountOnAxle;
+                g.DrawLine(Pens.Black, -3, (int)y, 3, (int)y);
+                DrawText(new Point(3, (int)y), (i).ToString(), g, true);
+                if (y > yMax)
                 {
                     break;
                 }
@@ -144,29 +137,33 @@ namespace Laba2.Windows
             _function = function;
             _panel.Invalidate();
         }
-        public  void DrawGraphics(Graphics graphic)
+        public void DrawGraphics(Graphics graphic)
         {
             Pen graphicsPen = new Pen(Color.Red);
-            var step = 0.1;
-            panelXmax = _zoom * (_panel.Size.Width/2) / PixelCountOnAxle;
-            panelXmin = _zoom * -(_panel.Size.Width / 2) / PixelCountOnAxle;
-            panelYmax = _zoom * (_panel.Size.Height / 2) / PixelCountOnAxle;
-            panelYmin = _zoom * -(_panel.Size.Height / 2) / PixelCountOnAxle;
-            for (double x = panelXmin; x < panelXmax; x+=step)
+
+            double pxMax = _panel.ClientSize.Width / 2;
+            double pxMin = -_panel.ClientSize.Width / 2;
+            double pyMax = _panel.ClientSize.Height / 2;
+            double pyMin = -_panel.ClientSize.Height / 2;
+            double fxMax = pxMax/PixelCountOnAxle/_zoom;
+            double fxMin = pxMin / PixelCountOnAxle / _zoom;
+            var step = (fxMax - fxMin) /_panel.Size.Width;
+
+            for (double fx = fxMin; fx < fxMax; fx += step)
             {
-                double fx1 = x;
-                double fx2 = x + step;
+                double fx1 = fx;
+                double fx2 = fx + step;
                 double fy1 = _function.Calc(fx1);
                 double fy2 = _function.Calc(fx2);
                 double px1 = _zoom * PixelCountOnAxle * fx1;
-                double py1 = _zoom * - PixelCountOnAxle * fy1;
+                double py1 = _zoom * -PixelCountOnAxle * fy1;
                 double px2 = _zoom * PixelCountOnAxle * fx2;
-                double py2 = _zoom * - PixelCountOnAxle * fy2;
-                Point point1 = new Point((int)px1,(int) py1);
-                Point point2 = new Point((int)px2,(int) py2);
-                if ((fy1 > panelYmin && fy2 > panelYmin) || (fy1 < panelYmax && fy2 < panelYmax))
+                double py2 = _zoom * -PixelCountOnAxle * fy2;
+                if ((py1 > pyMin && py2 > pyMin) || (py1 < pyMax && py2 < pyMax))
                 {
-                     graphic.DrawLine(graphicsPen, point1, point2);
+                    Point point1 = new Point((int)px1, (int)py1);
+                    Point point2 = new Point((int)px2, (int)py2);
+                    graphic.DrawLine(graphicsPen, point1, point2);
                 }
             }
         }
@@ -175,15 +172,29 @@ namespace Laba2.Windows
         {
             _zoom *= 1.1;
             _panel.Invalidate();
-           
+
         }
         public void ZoomOut()
         {
             _zoom /= 1.1;
+            //if (_zoom <= 1)
+            //{
+            //    PixelCountOnAxle = 1;
+            //    ScaleLabel.Visible = false;
+            //}
+            //else
+            //{
+            //    ScaleLabel.Visible = true;
+            //    ScaleLabel.Text = "scale = " + PixelCountOnAxle.ToString();
+            //}
             _panel.Invalidate();
         }
     }
 }
+
+
+
+
 //private double ZOOMFACTOR = 1.1;
 //private double MINMAX = 5;
 ////if ((_panel.Width < (MINMAX * _panel.Width)) &&

@@ -108,7 +108,7 @@
             this.ScaleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ScaleLabel.AutoSize = true;
-            this.ScaleLabel.Location = new System.Drawing.Point(467, 24);
+            this.ScaleLabel.Location = new System.Drawing.Point(477, 24);
             this.ScaleLabel.Name = "ScaleLabel";
             this.ScaleLabel.Size = new System.Drawing.Size(42, 20);
             this.ScaleLabel.TabIndex = 0;
@@ -119,11 +119,12 @@
             this.CoordAxes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.CoordAxes.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.CoordAxes.Controls.Add(this.label1);
             this.CoordAxes.Controls.Add(this.ScaleLabel);
             this.CoordAxes.Location = new System.Drawing.Point(-3, 0);
             this.CoordAxes.Name = "CoordAxes";
-            this.CoordAxes.Size = new System.Drawing.Size(547, 450);
+            this.CoordAxes.Size = new System.Drawing.Size(557, 450);
             this.CoordAxes.TabIndex = 1;
             this.CoordAxes.Paint += new System.Windows.Forms.PaintEventHandler(this.CoordAxes_Paint);
             this.CoordAxes.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CoordAxes_MouseDown);
