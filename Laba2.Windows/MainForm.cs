@@ -58,18 +58,25 @@ namespace Laba2.Windows
         }
         private void CoordAxes_MouseWheel(object? sender, MouseEventArgs e)
         {
+            
             //обновление масштаба
             int mouseWheelType = e.Delta;
             
             if (mouseWheelType >= 0)
             {
-                _chartDrawer.ZoomIn();
+                _chartDrawer.ZoomIn();               
             }
             else
             {
-                _chartDrawer.ZoomOut();
-
-                
+                _chartDrawer.ZoomOut();                   
+            }
+            if (Math.Abs(_chartDrawer.Zoom - 1) > 0.0001)
+            {
+                ScaleLabel.Text = "scale = " + _chartDrawer.Zoom.ToString("F2");
+            }
+            else
+            {
+                ScaleLabel.Text = null;
             }
         }
         int startX = 0;

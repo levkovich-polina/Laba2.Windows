@@ -5,15 +5,12 @@ namespace Laba2.Windows
 {
     public class ChartDrawer
     {
-        private IFunction _function;
+       
+        private IFunction _function;     
         private const int PixelCountOnAxle = 20;
         private const int ArrowLength = 10;
-        public readonly Panel _panel;
-        private double panelXmax;
-        private double panelXmin;
-        private double panelYmax;
-        private double panelYmin;
-
+        private readonly Panel _panel;
+ 
         public ChartDrawer(Panel panel)
         {
             _panel = panel;
@@ -21,6 +18,7 @@ namespace Laba2.Windows
             typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                null, _panel, new object[] { true }); ;
         }
+        public double Zoom = 1;
         private void _panel_Paint(object? sender, PaintEventArgs e)
         {
             int w = _panel.ClientSize.Width / 2;
@@ -46,7 +44,7 @@ namespace Laba2.Windows
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                double x = i * _zoom * PixelCountOnAxle;
+                double x = i * Zoom * PixelCountOnAxle;
 
                 g.DrawLine(Pens.Black, (int)x, -3, (int)x, 3);
                 DrawText(new Point((int)x, 3), (i).ToString(), g);
@@ -58,7 +56,7 @@ namespace Laba2.Windows
             //Деления в отрицательном направлении оси
             for (int i = -1; true; i--)
             {
-                double x = i * _zoom * PixelCountOnAxle;
+                double x = i * Zoom * PixelCountOnAxle;
                 g.DrawLine(Pens.Black, (int)x, -3, (int)x, 3);
                 DrawText(new Point((int)x, 3), (i).ToString(), g);
                 if (x < xMin)
@@ -79,7 +77,7 @@ namespace Laba2.Windows
             //Деления в отрицательном направлении оси
             for (int i = -1; true; i--)
             {
-                double y = i * _zoom * PixelCountOnAxle;
+                double y = i * Zoom * PixelCountOnAxle;
                 g.DrawLine(Pens.Black, -3, (int)y, 3, (int)y);
                 DrawText(new Point(3, (int)y), (i).ToString(), g, true);
                 if (y < yMin)
@@ -90,7 +88,7 @@ namespace Laba2.Windows
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                double y = i * _zoom * PixelCountOnAxle;
+                double y = i * Zoom * PixelCountOnAxle;
                 g.DrawLine(Pens.Black, -3, (int)y, 3, (int)y);
                 DrawText(new Point(3, (int)y), (i).ToString(), g, true);
                 if (y > yMax)
@@ -145,8 +143,8 @@ namespace Laba2.Windows
             double pxMin = -_panel.ClientSize.Width / 2;
             double pyMax = _panel.ClientSize.Height / 2;
             double pyMin = -_panel.ClientSize.Height / 2;
-            double fxMax = pxMax/PixelCountOnAxle/_zoom;
-            double fxMin = pxMin / PixelCountOnAxle / _zoom;
+            double fxMax = pxMax/PixelCountOnAxle/Zoom;
+            double fxMin = pxMin / PixelCountOnAxle / Zoom;
             var step = (fxMax - fxMin) /_panel.Size.Width;
 
             for (double fx = fxMin; fx < fxMax; fx += step)
@@ -155,10 +153,10 @@ namespace Laba2.Windows
                 double fx2 = fx + step;
                 double fy1 = _function.Calc(fx1);
                 double fy2 = _function.Calc(fx2);
-                double px1 = _zoom * PixelCountOnAxle * fx1;
-                double py1 = _zoom * -PixelCountOnAxle * fy1;
-                double px2 = _zoom * PixelCountOnAxle * fx2;
-                double py2 = _zoom * -PixelCountOnAxle * fy2;
+                double px1 = Zoom * PixelCountOnAxle * fx1;
+                double py1 = Zoom * -PixelCountOnAxle * fy1;
+                double px2 = Zoom * PixelCountOnAxle * fx2;
+                double py2 = Zoom * -PixelCountOnAxle * fy2;
                 if ((py1 > pyMin && py2 > pyMin) || (py1 < pyMax && py2 < pyMax))
                 {
                     Point point1 = new Point((int)px1, (int)py1);
@@ -167,26 +165,17 @@ namespace Laba2.Windows
                 }
             }
         }
-        private double _zoom = 1;
+       
         public void ZoomIn()
         {
-            _zoom *= 1.1;
+            Zoom *= 1.1;
             _panel.Invalidate();
 
         }
         public void ZoomOut()
         {
-            _zoom /= 1.1;
-            //if (_zoom <= 1)
-            //{
-            //    PixelCountOnAxle = 1;
-            //    ScaleLabel.Visible = false;
-            //}
-            //else
-            //{
-            //    ScaleLabel.Visible = true;
-            //    ScaleLabel.Text = "scale = " + PixelCountOnAxle.ToString();
-            //}
+            Zoom /= 1.1;
+
             _panel.Invalidate();
         }
     }
