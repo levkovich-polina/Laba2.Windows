@@ -47,7 +47,7 @@ namespace Laba2.Windows
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                double px = i * Zoom * PixelCountOnAxle;
+                int px =(int)( i * Zoom * PixelCountOnAxle);
 
                 g.DrawLine(Pens.Black, (int)px, -3, (int)px, 3);
                 DrawText(new Point((int)px, 3), (i).ToString(), g);
@@ -59,7 +59,7 @@ namespace Laba2.Windows
             //Деления в отрицательном направлении оси
             for (int i = -1; true; i--)
             {
-                double px = i * Zoom * PixelCountOnAxle;
+                int px = (int)(i * Zoom * PixelCountOnAxle);
                 g.DrawLine(Pens.Black, (int)px, -3, (int)px, 3);
                 DrawText(new Point((int)px, 3), (i).ToString(), g);
                 if (px < pxMin)
@@ -82,10 +82,10 @@ namespace Laba2.Windows
             //Деления в отрицательном направлении оси
             for (int i = -1; true; i--)
             {
-                double y = i * Zoom * PixelCountOnAxle;
-                g.DrawLine(Pens.Black, -3, (int)y, 3, (int)y);
-                DrawText(new Point(3, (int)y), (i).ToString(), g, true);
-                if (y < pyMin)
+                int py = (int)(i * Zoom * PixelCountOnAxle);
+                g.DrawLine(Pens.Black, -3, (int)py, 3, (int)py);
+                DrawText(new Point(3, (int)py), (i).ToString(), g, true);
+                if (py < pyMin)
                 {
                     break;
                 }
@@ -93,10 +93,10 @@ namespace Laba2.Windows
             //Деления в положительном направлении оси
             for (int i = 1; true; i++)
             {
-                double y = i * Zoom * PixelCountOnAxle;
-                g.DrawLine(Pens.Black, -3, (int)y, 3, (int)y);
-                DrawText(new Point(3, (int)y), (i).ToString(), g, true);
-                if (y > pyMax)
+                int py =(int)( i * Zoom * PixelCountOnAxle);
+                g.DrawLine(Pens.Black, -3, (int)py, 3, (int)py);
+                DrawText(new Point(3, (int)py), (i).ToString(), g, true);
+                if (py > pyMax)
                 {
                     break;
                 }
@@ -106,7 +106,7 @@ namespace Laba2.Windows
             //Ось
             g.DrawLine(Pens.Black, start, end);
             //Стрелка
-            g.DrawLines(Pens.Black, GetArrow(start.X, start.Y, end.X, end.Y, ArrowLength));
+            g.DrawLines(Pens.Black, GetArrow(end.X, end.Y, start.X, start.Y, ArrowLength));
         }
         //Рисование текста
         public void DrawText(Point point, string text, Graphics g, bool isYAxis = false)
