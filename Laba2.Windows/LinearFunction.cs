@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Laba2.Windows
 {
-    class LinearFunction : IFunction
+    public class LinearFunction : IFunction
     {
         private readonly double _a;
         private readonly double _b;

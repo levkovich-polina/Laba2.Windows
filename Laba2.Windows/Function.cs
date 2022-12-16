@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace Laba2.Windows
 {
-    public  interface IFunction
+     class Function : IFunction
     {
-        double Calc(double x);
+        public double Calc(double x)
+        {
+            return x;
+        }
     }
 }

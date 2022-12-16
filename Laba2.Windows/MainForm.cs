@@ -1,8 +1,12 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using static System.Formats.Asn1.AsnWriter;
 using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
@@ -13,68 +17,36 @@ namespace Laba2.Windows
     {
         IFunction function;
         public readonly ChartDrawer _chartDrawer;
-
-        private float SCALE = 1F;
-        private float startX = 0F;
-        private float startY = 0F;
-        private const int STEP = 15;
-        private bool MOUSE_DOWN = false;
-        private float moveByX = 0;
-        private float moveByY = 0;
-
+        private bool MOUSE_DOWN = false;        
+        private  int PixelCountOnAxle = 20;
         public MainForm()
         {
             InitializeComponent();
             _chartDrawer = new ChartDrawer(CoordAxes);
-            this.MouseWheel += new MouseEventHandler(CoordAxes_MouseWheel);
+            CoordAxes.MouseWheel += new MouseEventHandler(CoordAxes_MouseWheel);
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
+               null, CoordAxes, new object[] { true }); ;  // Double buffer for graphic
         }
 
-        private void CoordAxes_MouseWheel(object? sender, MouseEventArgs e)
-        {
-            //обновление масштаба
-            int mouseWheelType = e.Delta / 120;
-
-            if (mouseWheelType >= 0)
-            {
-                SCALE += 1F;
-            }
-            else
-            {
-                SCALE -= 1F;
-
-                if (SCALE <= 1F)
-                {
-                    SCALE = 1F;
-                    ScaleLabel.Visible = false;
-                }
-                else
-                {
-                    ScaleLabel.Visible = true;
-                    ScaleLabel.Text = "scale = " + SCALE.ToString();
-                }
-            }
-            CoordAxes.Invalidate();
-        }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            int width = CoordAxes.ClientSize.Width;
+            int height = CoordAxes.ClientSize.Height;
+
+            var saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Images (*.png,*.jpeg)|*.png;*.jpeg";
             if (CoordAxes.BackgroundImage != null) //если в pictureBox есть изображение
             {
-                //создание диалогового окна "Сохранить как..", для сохранения изображения
-                SaveFileDialog savedialog = new SaveFileDialog();
-                savedialog.Title = "Сохранить картинку как...";
-                //отображать ли предупреждение, если пользователь указывает имя уже существующего файла
-                savedialog.OverwritePrompt = true;
-                //отображать ли предупреждение, если пользователь указывает несуществующий путь
-                savedialog.CheckPathExists = true;
-                //список форматов файла, отображаемый в поле "Тип файла"
-                savedialog.Filter =
-                    "Image Files(*.BMP)|*.BMP|Image Files(*.JPG)|*.JPG|Image Files(*.GIF)|*.GIF|Image Files(*.PNG)|*.PNG|All files (*.*)|*.*";
-                //отображается ли кнопка "Справка" в диалоговом окне
-                savedialog.ShowHelp = true;
-                if (savedialog.ShowDialog() == DialogResult.OK) //если в диалоговом окне нажата кнопка "ОК"
+                if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
-                    BackgroundImage.Save(savedialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    DialogResult dialogResult = MessageBox.Show("Are you really want to save file?", "Save your plot", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Bitmap bmp = new Bitmap(width, height);
+                        CoordAxes.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width - GroupBox.Width, bmp.Height));
+                        bmp.Save(saveDialog.FileName, ImageFormat.Png);
+                    }
                 }
             }
         }
@@ -83,87 +55,46 @@ namespace Laba2.Windows
         {
             if (BackgroundColor.ShowDialog() == DialogResult.Cancel)
                 return;
-            //function. = GraphicColor.Color;
+            Pen graphicsPen = new Pen(BackgroundColor.Color);
         }
-       
-        private void RandomFunctionButton_Click(object sender, EventArgs g, PaintEventArgs e)
+        
+        private void CoordAxes_MouseWheel(object? sender, MouseEventArgs e)
         {
-            int width = (CoordAxes.ClientSize.Width - groupBox1.Width) / 2;
-            int height = CoordAxes.ClientSize.Height / 2;
-            Graphics graphic = e.Graphics;
-            Random rnd = new Random();
-            int randomFunction = rnd.Next(0, 5);
-            if (randomFunction == 0)
+            //обновление масштаба
+            int mouseWheelType = e.Delta;
+            
+            if (mouseWheelType >= 0)
             {
-                function = new CubicFunction();
-                _chartDrawer.DrawGraphic(width, height, graphic);
+                _chartDrawer.ZoomIn();
             }
-            else if (randomFunction == 1)
+            else
             {
-                double a = 2;
-                double b = 5;
-                function = new LinearFunction(a, b);
-                _chartDrawer.DrawGraphic(width, height, graphic);
-            }
-            else if (randomFunction == 2)
-            {
-                function = new QuadraticFunction();
-                _chartDrawer.DrawGraphic(width, height, graphic);
-            }
-            else if (randomFunction == 3)
-            {
-                function = new SinusFunction();
-                _chartDrawer.DrawGraphic(width, height, graphic);
-            }
-            else if (randomFunction == 4)
-            {
-                function = new TangentFunction();
-                _chartDrawer.DrawGraphic(width, height, graphic);
-            }
-        }
+                _chartDrawer.ZoomOut();
 
-        private void ChoiceComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-           
-            int choice = ChoiceComboBox.SelectedIndex;
-            if (choice == 0) //задний фон
-            {
-                if (BackgroundColor.ShowDialog() == DialogResult.OK)
+                if (_chartDrawer._zoom <= 1)
                 {
-                    BackColor = BackgroundColor.Color;
+                    PixelCountOnAxle = 1;
+                    ScaleLabel.Visible = false;
+                }
+                else
+                {
+                    ScaleLabel.Visible = true;
+                    ScaleLabel.Text = "scale = " + PixelCountOnAxle.ToString();
                 }
             }
-            else if (choice == 1) //градиент
-            {
-                Point startPoint = new Point(0, 0);
-                Point endPoint = new Point(150, 150);
-
-                //LinearGradientBrush lgb = new LinearGradientBrush(startPoint, endPoint, Color.FromArgb(255, 255, 0, 0),
-                //    Color.FromArgb(255, 255, 255, 0));
-                //Graphics g = e.Graphics;
-                //g.FillRectangle(lgb, 0, 0, 150, 150);
-            }
-            else if (choice == 2) //вертикальная штриховка
-            {
-            }
-            else if (choice == 3) //горизонтальная штриховка
-            {
-            }
-            else if (choice == 4) //фон-картинка
-            {
-                CoordAxes.BackgroundImage = Image.FromFile("1612726633_168-p-krasivie-golubie-foni-neba-222.jpg");
-            }
         }
 
+        int startX = 0;
+        int startY = 0;
         private void CoordAxes_MouseDown(object sender, MouseEventArgs e)
         {
             // При нажатии на левую кнопку мыши
             if (e.Button == MouseButtons.Left)
             {
-                startX = e.X / (SCALE * STEP);
-                startY = e.Y / (SCALE * STEP);
-
+                startX = e.X;
+                startY = e.Y;
                 MOUSE_DOWN = true;
+                Co.Focus();
             }
             else
             {
@@ -173,25 +104,116 @@ namespace Laba2.Windows
 
         private void CoordAxes_MouseUp(object sender, MouseEventArgs e)
         {
-            // Up left mouse button
+            // При отпускании кнопки
             if (e.Button == MouseButtons.Left)
             {
-                MOUSE_DOWN = false;
+                MOUSE_DOWN = false;               
             }
         }
 
+        private int moveByX = 0;
+        private int moveByY = 0;
         private void CoordAxes_MouseMove(object sender, MouseEventArgs e)
         {
-            // Move mouse and move graphic
-            if (MOUSE_DOWN)
+            // Двигается график при перемешение мыши
+            if (MOUSE_DOWN==true)
             {
-                moveByX += e.X / (SCALE * STEP) - startX;
-                moveByY += e.Y / (SCALE * STEP) - startY;
+                moveByX = moveByX - startX + e.X;
+                moveByY = moveByY - startY + e.Y;
+                startX = e.X;
+                startY = e.Y;
+                CoordAxes.Invalidate();
+            }
+        }
 
-                startX = e.X / (SCALE * STEP);
-                startY = e.Y / (SCALE * STEP);
+        private void RandomFunctionButton_Click(object sender, EventArgs e)
+        {
+            Random random = new Random();
+            int randomFunction = random.Next(0, 5);
+            if (randomFunction == 0)
+            {
+                function = new CubicFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Кубическая функция");
+            }
+            else if (randomFunction == 1)
+            {
+                double a = 2;
+                double b = 5;
+                function = new LinearFunction(a, b);
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Линейная функция");
+            }
+            else if (randomFunction == 2)
+            {
+                function = new QuadraticFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Квадратичная функция");
+            }
+            else if (randomFunction == 3)
+            {
+                function = new SinusFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Функция синуса");
+            }
+            else if (randomFunction == 4)
+            {
+                function = new TangentFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Функция тангенса");
+            }
+        }
 
-                CoordAxes.Refresh();
+        public Color Color1;
+        public Color Color2;
+        private void CoordAxes_Paint(object sender, PaintEventArgs e)
+        {
+            int width = CoordAxes.ClientSize.Width / 2;
+            int height = CoordAxes.ClientSize.Height / 2;
+            int choice = ChoiceComboBox.SelectedIndex;
+            var stepScale = PixelCountOnAxle;
+            Graphics graphic = e.Graphics;
+            Pen backgroundPen = new Pen(Color.Black);
+            if (choice == 0)
+            {
+                if (BackgroundColor.ShowDialog() == DialogResult.OK)
+                {
+                    CoordAxes.BackColor = BackgroundColor.Color;
+                }
+            }
+            else if (choice == 1) //градиент
+            {
+                var firstColor = GradientColor.Color;
+                if (GradientColor.ShowDialog() == DialogResult.OK)
+                {
+                    Color1 = firstColor;
+                    Color2 = GradientColor.Color;
+                    LinearGradientBrush brush = new LinearGradientBrush(new Point(0, 0), new Point(width * 2, height * 2), Color1, Color2);
+                    graphic.Clear(DefaultBackColor);
+                    graphic.FillRectangle(brush, CoordAxes.ClientRectangle);
+                }
+            }
+            else if (choice == 2) // штриховка
+            {
+                for (int x = 0; x < width * 2; x += (int)stepScale / 2)
+                {
+                    graphic.DrawLine(backgroundPen, x, 0, x, height * 2);
+                }
+            }
+            else if (choice == 3) //квадратный фон
+            {
+                for (int x = 0; x < width * 2; x += (int)stepScale)
+                {
+                    graphic.DrawLine(backgroundPen, x, 0, x, height * 2);
+                }
+                for (int y = 0; y < height * 2; y += (int)stepScale)
+                {
+                    graphic.DrawLine(backgroundPen, 0, y, width * 2, y);
+                }
+            }
+            else if (choice == 4) //фон-картинка
+            {
+                CoordAxes.BackgroundImage = Image.FromFile("D:\\repositories\\Laba2.Windows\\1612726633_168-p-krasivie-golubie-foni-neba-222.jpg");
             }
         }
     }

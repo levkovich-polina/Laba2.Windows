@@ -1,40 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Laba2.Windows
 {
     public class ChartDrawer
     {
-        IFunction function;
-        private const int PixelCountOnAxle = 25;
+        private IFunction _function;
+        private const int PixelCountOnAxle = 20;
         private const int ArrowLength = 10;
         public readonly Panel _panel;
-
-        const int STEP = 15;
-        const float NUM = 45F;
-        private float SCALE = 1F;
-
-        private float ellipsX1 = 0;
-        private float ellipsX2 = 0;
-        private bool drawEllips = false;
-
-        private float moveX = 0;
-        private float moveY = 0;
+        private double panelXmax;
+        private double panelXmin;
+        private double panelYmax;
+        private double panelYmin;
 
         public ChartDrawer(Panel panel)
         {
             _panel = panel;
             _panel.Paint += _panel_Paint;
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
+               null, _panel, new object[] { true }); ;  // Double buffer for graphic
         }
-
         private void _panel_Paint(object? sender, PaintEventArgs e)
         {
-            int w = _panel.ClientSize.Width / 2;
-            int h = _panel.ClientSize.Height / 2;
+            int w = _panel.ClientSize.Width/ 2;
+            int h = _panel.Size.Height / 2;
+            Graphics graphic = e.Graphics;
             //Смещение начала координат в центр PictureBox
             e.Graphics.TranslateTransform(w, h);
             DrawXAxis(new Point(-w, 0), new Point(w, 0), e.Graphics);
@@ -42,42 +41,69 @@ namespace Laba2.Windows
             //Центр координат
             e.Graphics.FillEllipse(Brushes.Red, -2, -2, 4, 4);
             //Рисование оси X
+            if(_function!=null)
+            {
+                DrawGraphics(graphic);
+            }
         }
-
+        private double displacement;
         public void DrawXAxis(Point start, Point end, Graphics g)
         {
+            int w = _panel.ClientSize.Width / 2;       
+            double X= (_panel.Size.Width / 2) / PixelCountOnAxle;         
             //Деления в положительном направлении оси
-            for (int i = PixelCountOnAxle; i < end.X - ArrowLength; i += PixelCountOnAxle)
+            for (int i = 1; true; i++)
             {
-                g.DrawLine(Pens.Black, i, -5, i, 5);
-                DrawText(new Point(i, 5), (i / PixelCountOnAxle).ToString(), g);
+                displacement = i *_zoom * PixelCountOnAxle + w;
+                g.DrawLine(Pens.Black, i*PixelCountOnAxle, -3, i * PixelCountOnAxle, 3);
+                DrawText(new Point(i * PixelCountOnAxle, 3), (i * PixelCountOnAxle / PixelCountOnAxle).ToString(), g);
+                if (i > X)
+                {
+                    break;
+                }
             }
             //Деления в отрицательном направлении оси
-            for (int i = -PixelCountOnAxle; i > start.X; i -= PixelCountOnAxle)
+            for (int i = 1; true; i++)
             {
-                g.DrawLine(Pens.Black, i, -5, i, 5);
-                DrawText(new Point(i, 5), (i / PixelCountOnAxle).ToString(), g);
+                displacement = i * _zoom * PixelCountOnAxle + w;
+                g.DrawLine(Pens.Black, i * -PixelCountOnAxle, -3, i * -PixelCountOnAxle, 3);
+                DrawText(new Point(i * -PixelCountOnAxle, 3), (-i * -PixelCountOnAxle / PixelCountOnAxle).ToString(), g);
+                if (i > X)
+                {
+                    break;
+                }
             }
-            //Ось
+            //Ось     
             g.DrawLine(Pens.Black, start, end);
             //Стрелка
             g.DrawLines(Pens.Black, GetArrow(start.X, start.Y, end.X, end.Y, ArrowLength));
         }
-
         //Рисование оси Y
         public void DrawYAxis(Point start, Point end, Graphics g)
         {
+            int h = _panel.Size.Height / 2;
+            double Y = (_panel.Size.Height / 2) / PixelCountOnAxle;
             //Деления в отрицательном направлении оси
-            for (int i = PixelCountOnAxle; i < start.Y; i += PixelCountOnAxle)
+            for (int i = 1; true; i++)
             {
-                g.DrawLine(Pens.Black, -5, i, 5, i);
-                DrawText(new Point(5, i), (-i / PixelCountOnAxle).ToString(), g, true);
+                displacement = i  * _zoom * PixelCountOnAxle + h;
+                g.DrawLine(Pens.Black, -3, i * PixelCountOnAxle, 3, i * PixelCountOnAxle);
+                DrawText(new Point(3, i * PixelCountOnAxle), (i * PixelCountOnAxle / PixelCountOnAxle).ToString(), g, true);
+                if (i > Y)
+                {
+                    break;
+                }
             }
             //Деления в положительном направлении оси
-            for (int i = -PixelCountOnAxle; i > end.Y + ArrowLength; i -= PixelCountOnAxle)
+            for (int i = 1; true; i++)
             {
-                g.DrawLine(Pens.Black, -5, i, 5, i);
-                DrawText(new Point(5, i), (-i / PixelCountOnAxle).ToString(), g, true);
+                displacement = i * _zoom * PixelCountOnAxle + h;
+                g.DrawLine(Pens.Black, -3, i * -PixelCountOnAxle, 3, i * -PixelCountOnAxle);
+                DrawText(new Point(3, i * -PixelCountOnAxle), (-i * -PixelCountOnAxle / PixelCountOnAxle).ToString(), g, true);
+                if (i > Y)
+                {
+                    break;
+                }
             }
             //Ось
             g.DrawLine(Pens.Black, start, end);
@@ -113,61 +139,66 @@ namespace Laba2.Windows
             result[2] = new PointF(n.X - v1.Y * width, n.Y + v1.X * width);
             return result;
         }
-        public void DrawGraphic (int width, int height, Graphics graphic)
+        public void SetFunction(IFunction function)
         {
-            // Draw graphic
-            Pen pen = new Pen(Color.Black);
+            _function = function;
+            _panel.Invalidate();
+        }
 
-            // x > 0
-            int cnt = 0;
-            var stepScale = STEP * SCALE;
-
-            Point[] points = new Point[(int)(width * NUM / stepScale)];
-
-            for (float x = 0F - moveX * SCALE * STEP; x > -width - moveX * SCALE * STEP; x -= (float)(stepScale / NUM))
+        public  void DrawGraphics(Graphics graphic)
+        {
+            Pen graphicsPen = new Pen(Color.Red);
+            var step = 0.1;
+            panelXmax = _zoom * (_panel.Size.Width/2) / PixelCountOnAxle;
+            panelXmin = _zoom * -(_panel.Size.Width / 2) / PixelCountOnAxle;
+            panelYmax = _zoom * (_panel.Size.Height / 2) / PixelCountOnAxle;
+            panelYmin = _zoom * -(_panel.Size.Height / 2) / PixelCountOnAxle;
+            for (double x = panelXmin; x < panelXmax; x+=step)
             {
-                double realX = x / stepScale;
-                double realY = function.Calc(x) * stepScale;
-                points[cnt] = new Point((int)(x + moveX * SCALE * STEP), -(int)(realY - moveY * SCALE * STEP));
-                cnt++;
-                if (drawEllips)
+                double fx1 = x;
+                double fx2 = x + step;
+                double fy1 = _function.Calc(fx1);
+                double fy2 = _function.Calc(fx2);
+                double px1 = _zoom * PixelCountOnAxle * fx1;
+                double py1 = _zoom * - PixelCountOnAxle * fy1;
+                double px2 = _zoom * PixelCountOnAxle * fx2;
+                double py2 = _zoom * - PixelCountOnAxle * fy2;
+                Point point1 = new Point((int)px1,(int) py1);
+                Point point2 = new Point((int)px2,(int) py2);
+                if ((fy1 > panelYmin && fy2 > panelYmin) || (fy1 < panelYmax && fy2 < panelYmax))
                 {
-                    if (Math.Abs(ellipsX1 - x) <= 1 && ellipsX1 != 0)
-                    {
-                        graphic.FillEllipse(Brushes.Black, new Rectangle((int)(x + moveX * SCALE * STEP), -(int)(realY - moveY * SCALE * STEP) - 10, 15, 15));
-                    }
-                }
-                if (cnt == points.Length)
-                {
-                    break;
+                     graphic.DrawLine(graphicsPen, point1, point2);
                 }
             }
-            graphic.DrawLines(pen,points);
-
-            // x < 0
-            cnt = 0;
-            points = new Point[(int)(width * NUM / stepScale)];
-
-            for (float x = 0F - moveX * stepScale; x < width - moveX * SCALE * STEP; x += (float)(stepScale / NUM))
-            {
-                double realX = x / stepScale;
-                double realY = function.Calc(x) * stepScale;
-                points[cnt] = new Point((int)(x + moveX * stepScale), -(int)(realY - moveY * stepScale));
-                cnt++;
-                if (drawEllips)
-                {
-                    if (Math.Abs(ellipsX2 - x) <= 1 && ellipsX2 != 0)
-                    {
-                        graphic.FillEllipse(Brushes.Black, new Rectangle((int)(x + moveX * stepScale), -(int)(realY - moveY * stepScale) - 10, 15, 15));
-                    }
-                }
-                if (cnt == points.Length)
-                {
-                    break;
-                }
-            }
-            graphic.DrawLines(pen, points);
-            graphic.TranslateTransform(-width, -height);
+        }
+        private double _zoom = 1;
+        public void ZoomIn()
+        {
+            _zoom *= 1.1;
+            _panel.Invalidate();
+            //if (_zoom <= 1)
+            //{
+            //    _zoom = 1;
+            //     ScaleLabel.Visible = false;
+            //}
+            //else
+            //{
+            //    ScaleLabel.Visible = true;
+            //    ScaleLabel.Text = "scale = " + _zoom.ToString();
+            //}
+        }
+        public void ZoomOut()
+        {
+            _zoom /= 1.1;
+            _panel.Invalidate();
         }
     }
 }
+//private double ZOOMFACTOR = 1.1;
+//private double MINMAX = 5;
+////if ((_panel.Width < (MINMAX * _panel.Width)) &&
+//                  (_panel.Height < (MINMAX * _panel.Height)))
+//            {
+//    _panel.Width = Convert.ToInt32(_panel.Width / ZOOMFACTOR);
+//    _panel.Height = Convert.ToInt32(_panel.Height / ZOOMFACTOR);
+//}
