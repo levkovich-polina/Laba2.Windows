@@ -146,13 +146,13 @@ namespace Laba2.Windows
         {
             Pen graphicsPen = new Pen(Color.Red);
 
-            double pxMax = _panel.ClientSize.Width / 2;
-            double pxMin = -_panel.ClientSize.Width / 2;
-            double pyMax = _panel.ClientSize.Height / 2;
-            double pyMin = -_panel.ClientSize.Height / 2;
+            int pxMax = _panel.Size.Width / 2 - _pShiftX;
+            int pxMin = pxMax - _panel.ClientSize.Width;
+            int pyMax = _panel.Size.Height / 2 - _pShiftY;
+            int pyMin = pyMax - _panel.ClientSize.Height;
             double fxMax = pxMax / PixelCountOnAxle / Zoom;
             double fxMin = pxMin / PixelCountOnAxle / Zoom;
-            var step = (fxMax - fxMin) / _panel.Size.Width;
+            var step = ((fxMax - fxMin) / _panel.Size.Width)/100;
 
             for (double fx = fxMin; fx < fxMax; fx += step)
             {
