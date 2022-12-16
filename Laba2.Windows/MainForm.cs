@@ -27,8 +27,6 @@ namespace Laba2.Windows
             typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                null, CoordAxes, new object[] { true }); ;  // Double buffer for graphic
         }
-
-
         private void SaveButton_Click(object sender, EventArgs e)
         {
             int width = CoordAxes.ClientSize.Width;
@@ -50,14 +48,14 @@ namespace Laba2.Windows
                 }
             }
         }
-
         private void GraphColorButton_Click(object sender, EventArgs e)
         {
-            if (BackgroundColor.ShowDialog() == DialogResult.Cancel)
-                return;
-            Pen graphicsPen = new Pen(BackgroundColor.Color);
+            ColorDialog BackgroundColor = new ColorDialog();
+            if (BackgroundColor.ShowDialog() == DialogResult.OK)
+            {
+               
+            }
         }
-        
         private void CoordAxes_MouseWheel(object? sender, MouseEventArgs e)
         {
             //обновление масштаба
@@ -71,19 +69,18 @@ namespace Laba2.Windows
             {
                 _chartDrawer.ZoomOut();
 
-                if (_chartDrawer._zoom <= 1)
-                {
-                    PixelCountOnAxle = 1;
-                    ScaleLabel.Visible = false;
-                }
-                else
-                {
-                    ScaleLabel.Visible = true;
-                    ScaleLabel.Text = "scale = " + PixelCountOnAxle.ToString();
-                }
+                //if (_chartDrawer._zoom <= 1)
+                //{
+                //    PixelCountOnAxle = 1;
+                //    ScaleLabel.Visible = false;
+                //}
+                //else
+                //{
+                //    ScaleLabel.Visible = true;
+                //    ScaleLabel.Text = "scale = " + PixelCountOnAxle.ToString();
+                //}
             }
         }
-
         int startX = 0;
         int startY = 0;
         private void CoordAxes_MouseDown(object sender, MouseEventArgs e)
@@ -91,17 +88,16 @@ namespace Laba2.Windows
             // При нажатии на левую кнопку мыши
             if (e.Button == MouseButtons.Left)
             {
-                startX = e.X;
-                startY = e.Y;
                 MOUSE_DOWN = true;
-                Co.Focus();
+                startX = e.X/PixelCountOnAxle;
+                startY = e.Y/PixelCountOnAxle;
+                CoordAxes.Focus();
             }
             else
             {
                 MOUSE_DOWN = false;
             }
         }
-
         private void CoordAxes_MouseUp(object sender, MouseEventArgs e)
         {
             // При отпускании кнопки
@@ -110,22 +106,20 @@ namespace Laba2.Windows
                 MOUSE_DOWN = false;               
             }
         }
-
-        private int moveByX = 0;
-        private int moveByY = 0;
         private void CoordAxes_MouseMove(object sender, MouseEventArgs e)
         {
             // Двигается график при перемешение мыши
-            if (MOUSE_DOWN==true)
+            if (MOUSE_DOWN)
             {
-                moveByX = moveByX - startX + e.X;
-                moveByY = moveByY - startY + e.Y;
-                startX = e.X;
-                startY = e.Y;
+                int moveByX = (CoordAxes.Size.Width / 2) / PixelCountOnAxle;
+                int moveByY = (CoordAxes.Size.Height / 2) / PixelCountOnAxle;
+                moveByX = moveByX - startX;
+                moveByY = moveByY - startY;
+                startX = e.X/PixelCountOnAxle;
+                startY = e.Y/PixelCountOnAxle;
                 CoordAxes.Invalidate();
             }
         }
-
         private void RandomFunctionButton_Click(object sender, EventArgs e)
         {
             Random random = new Random();
@@ -163,7 +157,6 @@ namespace Laba2.Windows
                 label1.Text = ("Функция тангенса");
             }
         }
-
         public Color Color1;
         public Color Color2;
         private void CoordAxes_Paint(object sender, PaintEventArgs e)

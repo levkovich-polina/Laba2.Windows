@@ -144,7 +144,6 @@ namespace Laba2.Windows
             _function = function;
             _panel.Invalidate();
         }
-
         public  void DrawGraphics(Graphics graphic)
         {
             Pen graphicsPen = new Pen(Color.Red);
@@ -176,16 +175,7 @@ namespace Laba2.Windows
         {
             _zoom *= 1.1;
             _panel.Invalidate();
-            //if (_zoom <= 1)
-            //{
-            //    _zoom = 1;
-            //     ScaleLabel.Visible = false;
-            //}
-            //else
-            //{
-            //    ScaleLabel.Visible = true;
-            //    ScaleLabel.Text = "scale = " + _zoom.ToString();
-            //}
+           
         }
         public void ZoomOut()
         {
