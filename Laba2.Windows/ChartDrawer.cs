@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace Laba2.Windows
 {
@@ -28,16 +30,19 @@ namespace Laba2.Windows
         private void _panel_Paint(object? sender, PaintEventArgs e)
         {
             int pCenterX = _panel.ClientSize.Width / 2 + _pShiftX;
-            int pCenterY = _panel.Size.Height / 2 + _pShiftY;
+            int pCenterY = _panel.Size.Height / 2 + _pShiftY;            
             Graphics graphic = e.Graphics;
+            Pen blackPen = new Pen(Color.Black);
             //e.Graphics.Clear(Color.Transparent);
             DrawBackground(graphic);
             //Смещение начала координат в центр PictureBox
             e.Graphics.TranslateTransform(pCenterX, pCenterY);
+            DrawDottedCircle(graphic);
             DrawXAxis(e.Graphics);
             DrawYAxis(e.Graphics);
             //Центр координат
             e.Graphics.FillEllipse(Brushes.Red, -2, -2, 4, 4);
+           
             if (_function != null)
             {
                 DrawGraphics(graphic);
@@ -121,6 +126,7 @@ namespace Laba2.Windows
             //Стрелка
             g.DrawLines(Pens.Black, GetArrow(end.X, end.Y, start.X, start.Y, ArrowLength));
         }
+     
         //Рисование текста
         public void DrawText(Point point, string text, Graphics g, bool isYAxis = false)
         {
@@ -158,7 +164,7 @@ namespace Laba2.Windows
         private void DrawGraphics(Graphics graphic)
         {
             Pen graphicsPen = new Pen(_graphicsColor);
-
+            Pen graphicsPen1 = new Pen(Color.Red);
             int pxMax = _panel.Size.Width / 2 - _pShiftX;
             int pxMin = pxMax - _panel.ClientSize.Width;
             int pyMax = _panel.Size.Height / 2 - _pShiftY;
@@ -182,6 +188,10 @@ namespace Laba2.Windows
                     Point point1 = new Point((int)px1, (int)py1);
                     Point point2 = new Point((int)px2, (int)py2);
                     graphic.DrawLine(graphicsPen, point1, point2);
+                    if(py1>0 && py2>0)
+                    {
+                        graphic.DrawLine(graphicsPen1, point1, point2);
+                    }
                 }
             }
         }
@@ -218,6 +228,18 @@ namespace Laba2.Windows
         {
             _backgroundDrawer = backgroundDrawer;
             _panel.Invalidate();
+        }
+        private void DrawDottedCircle(Graphics graphics)
+        {
+            var dottedPen = new Pen(new SolidBrush(Color.DarkBlue), 1)
+            {
+                DashPattern = new[] { 15f, 15f }
+            };
+            var dRadius = PixelCountOnAxle * Zoom;
+            var px = -dRadius;
+            var py = -dRadius;
+            var pDiameter = 2 * dRadius;
+            graphics.DrawEllipse(dottedPen, (int)px, (int)py, (int)pDiameter, (int)pDiameter);
         }
     }
 }

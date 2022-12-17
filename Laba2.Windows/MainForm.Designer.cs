@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.GroupBox = new System.Windows.Forms.GroupBox();
+            this.FunctionBox = new System.Windows.Forms.ComboBox();
             this.ChoiceComboBox = new System.Windows.Forms.ComboBox();
             this.GraphColorButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
@@ -48,6 +49,7 @@
             this.GroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox.BackColor = System.Drawing.Color.LightCyan;
+            this.GroupBox.Controls.Add(this.FunctionBox);
             this.GroupBox.Controls.Add(this.ChoiceComboBox);
             this.GroupBox.Controls.Add(this.GraphColorButton);
             this.GroupBox.Controls.Add(this.SaveButton);
@@ -58,6 +60,21 @@
             this.GroupBox.Size = new System.Drawing.Size(250, 450);
             this.GroupBox.TabIndex = 0;
             this.GroupBox.TabStop = false;
+            // 
+            // FunctionBox
+            // 
+            this.FunctionBox.FormattingEnabled = true;
+            this.FunctionBox.Items.AddRange(new object[] {
+            "Linear Function",
+            "Cubic Function",
+            "Quadratic Funcion ",
+            "Sinus Function",
+            "Tangen Function"});
+            this.FunctionBox.Location = new System.Drawing.Point(31, 61);
+            this.FunctionBox.Name = "FunctionBox";
+            this.FunctionBox.Size = new System.Drawing.Size(169, 28);
+            this.FunctionBox.TabIndex = 5;
+            this.FunctionBox.SelectedIndexChanged += new System.EventHandler(this.FunctionBox_SelectedIndexChanged);
             // 
             // ChoiceComboBox
             // 
@@ -96,7 +113,7 @@
             // 
             // RandomFunctionButton
             // 
-            this.RandomFunctionButton.Location = new System.Drawing.Point(31, 60);
+            this.RandomFunctionButton.Location = new System.Drawing.Point(31, 296);
             this.RandomFunctionButton.Name = "RandomFunctionButton";
             this.RandomFunctionButton.Size = new System.Drawing.Size(169, 28);
             this.RandomFunctionButton.TabIndex = 0;
@@ -170,5 +187,6 @@
         private ColorDialog GradientColor;
         private Label ScaleLabel;
         private Label label1;
+        private ComboBox FunctionBox;
     }
 }

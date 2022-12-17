@@ -7,7 +7,7 @@ namespace Laba2.Windows
     {
         IFunction function;
         public readonly ChartDrawer _chartDrawer;
-        private int PixelCountOnAxle = 20;
+
         public MainForm()
         {
             InitializeComponent();
@@ -108,38 +108,7 @@ namespace Laba2.Windows
         {
             Random random = new Random();
             int randomFunction = random.Next(0, 5);
-            if (randomFunction == 0)
-            {
-                function = new CubicFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Кубическая функция");
-            }
-            else if (randomFunction == 1)
-            {
-                double a = 2;
-                double b = 5;
-                function = new LinearFunction(a, b);
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Линейная функция");
-            }
-            else if (randomFunction == 2)
-            {
-                function = new QuadraticFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Квадратичная функция");
-            }
-            else if (randomFunction == 3)
-            {
-                function = new SinusFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Функция синуса");
-            }
-            else if (randomFunction == 4)
-            {
-                function = new TangentFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Функция тангенса");
-            }
+
         }
 
         private void ChoiceComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -182,7 +151,14 @@ namespace Laba2.Windows
             else if (choice == 4) //фон-картинка
             {
                 DrawingPanel.BackColor = Color.Transparent;
-                DrawingPanel.BackgroundImage = Image.FromFile("D:\\repositories\\Laba2.Windows\\1612726633_168-p-krasivie-golubie-foni-neba-222.jpg");
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+
+                    DrawingPanel.BackgroundImage = Image.FromFile(openFileDialog.FileName);
+
+
+                }
                 _chartDrawer.SetBackgroundDrawer(null);
             }
         }
@@ -193,6 +169,42 @@ namespace Laba2.Windows
             DrawingPanel.Invalidate();
         }
 
+        private void FunctionBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int choice = FunctionBox.SelectedIndex;
+            if (choice == 0)
+            {
+                double a = 2;
+                double b = 5;
+                function = new LinearFunction(a, b);
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Линейная функция");              
+            }
+            else if (choice == 1)
+            {
+                function = new CubicFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Кубическая функция");
+            }
+            else if (choice == 2)
+            {
+                function = new QuadraticFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Квадратичная функция");
+            }
+            else if (choice == 3)
+            {
+                function = new SinusFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Функция синуса");
+            }
+            else if (choice == 4)
+            {
+                function = new TangentFunction();
+                _chartDrawer.SetFunction(function);
+                label1.Text = ("Функция тангенса");
+            }
+        }
     }
 }
 
