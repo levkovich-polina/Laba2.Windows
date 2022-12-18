@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Laba2.Windows
 {
+   
     class TangentFunction : IFunction
     {
+        public string Name => "tg(x)";
         public double Calc(double x)
         {
             return Math.Tan(x);

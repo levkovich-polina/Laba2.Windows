@@ -8,6 +8,7 @@ namespace Laba2.Windows
 {
     class SinusFunction : IFunction
     {
+        public string Name => "sin(x)";
         public double Calc(double x)
         {
             return Math.Sin(x);

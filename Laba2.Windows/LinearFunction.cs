@@ -10,7 +10,7 @@ namespace Laba2.Windows
     {
         private readonly double _a;
         private readonly double _b;
-
+        public string Name => "2*x+5";
         public LinearFunction(double a, double b)
         {
             _a = a;

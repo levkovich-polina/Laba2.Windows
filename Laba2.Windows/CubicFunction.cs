@@ -8,9 +8,12 @@ namespace Laba2.Windows
 {
     class CubicFunction : IFunction
     {
+        public string Name => "x^3";
+
         public double Calc(double x)
         {
             return x * x * x;
         }
+
     }
 }

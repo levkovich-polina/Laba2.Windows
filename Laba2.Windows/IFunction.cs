@@ -9,5 +9,6 @@ namespace Laba2.Windows
     public  interface IFunction
     {
         double Calc(double x);
+        string Name { get; }
     }
 }
