@@ -31,7 +31,6 @@
             this.FormulaTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.AddButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // FormulaTextBox
@@ -53,28 +52,19 @@
             // 
             // AddButton
             // 
-            this.AddButton.Location = new System.Drawing.Point(152, 146);
+            this.AddButton.Location = new System.Drawing.Point(223, 149);
             this.AddButton.Name = "AddButton";
             this.AddButton.Size = new System.Drawing.Size(94, 42);
             this.AddButton.TabIndex = 2;
             this.AddButton.Text = "ADD";
             this.AddButton.UseVisualStyleBackColor = true;
-            // 
-            // CancelButton
-            // 
-            this.CancelButton.Location = new System.Drawing.Point(287, 146);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(94, 41);
-            this.CancelButton.TabIndex = 3;
-            this.CancelButton.Text = "CANCEL";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // CreateFormulaForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(516, 243);
-            this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.AddButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.FormulaTextBox);
@@ -90,6 +80,5 @@
         private TextBox FormulaTextBox;
         private Label label1;
         private Button AddButton;
-        private Button CancelButton;
     }
 }

@@ -68,6 +68,8 @@ namespace Laba2.Windows
             }
         }
         private Point? _previousMouseLocation;
+        private CreateFormulaForm _createFormulaForm;
+
         private void CoordAxes_MouseDown(object sender, MouseEventArgs e)
         {
             // При нажатии на левую кнопку мыши
@@ -205,6 +207,13 @@ namespace Laba2.Windows
                 label1.Text = ("Функция тангенса");
             }
         }
+
+        private void AddFunctionButton_Click(object sender, EventArgs e, CreateFormulaForm createFormulaForm)
+        {
+            _createFormulaForm = createFormulaForm;
+            CreateFormulaForm form = new CreateFormulaForm();
+            form.Show();
+            
     }
 }
 

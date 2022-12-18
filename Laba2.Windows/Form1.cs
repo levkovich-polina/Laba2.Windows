@@ -21,5 +21,13 @@ namespace Laba2.Windows
         {
 
         }
+
+        private void AddButton_Click(object sender, EventArgs e)
+        {
+            if( FormulaTextBox.Text == String.Empty)
+            {
+              MessageBox.Show("You can't add an empty line! Enter a function", "Error", MessageBoxButtons.OK);                
+            }
+        }
     }
 }

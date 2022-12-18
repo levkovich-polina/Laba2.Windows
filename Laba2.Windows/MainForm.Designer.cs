@@ -40,6 +40,7 @@
             this.DrawingPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.GradientColor = new System.Windows.Forms.ColorDialog();
+            this.AddFunctionButton = new System.Windows.Forms.Button();
             this.GroupBox.SuspendLayout();
             this.DrawingPanel.SuspendLayout();
             this.SuspendLayout();
@@ -49,6 +50,7 @@
             this.GroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox.BackColor = System.Drawing.Color.LightCyan;
+            this.GroupBox.Controls.Add(this.AddFunctionButton);
             this.GroupBox.Controls.Add(this.FunctionBox);
             this.GroupBox.Controls.Add(this.ChoiceComboBox);
             this.GroupBox.Controls.Add(this.GraphColorButton);
@@ -157,6 +159,16 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
             // 
+            // AddFunctionButton
+            // 
+            this.AddFunctionButton.Location = new System.Drawing.Point(36, 246);
+            this.AddFunctionButton.Name = "AddFunctionButton";
+            this.AddFunctionButton.Size = new System.Drawing.Size(164, 29);
+            this.AddFunctionButton.TabIndex = 6;
+            this.AddFunctionButton.Text = "add function";
+            this.AddFunctionButton.UseVisualStyleBackColor = true;
+            this.AddFunctionButton.Click += new System.EventHandler(this.AddFunctionButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -188,5 +200,6 @@
         private Label ScaleLabel;
         private Label label1;
         private ComboBox FunctionBox;
+        private Button AddFunctionButton;
     }
 }
