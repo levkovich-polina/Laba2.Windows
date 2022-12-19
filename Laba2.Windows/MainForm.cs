@@ -11,6 +11,12 @@ namespace Laba2.Windows
         public MainForm()
         {
             InitializeComponent();
+            FunctionsComboBox.Items.Add(new LinearFunction(2, 5));
+            FunctionsComboBox.Items.Add(new SinusFunction());
+            FunctionsComboBox.Items.Add(new CubicFunction());
+            FunctionsComboBox.Items.Add(new TangentFunction());
+            FunctionsComboBox.Items.Add(new QuadraticFunction());
+
             _chartDrawer = new ChartDrawer(DrawingPanel);
             _chartDrawer.SetBackgroundDrawer(new SolidDrawer(Color.White));
             _chartDrawer.SetGraphicsColor(Color.Green);
@@ -171,49 +177,21 @@ namespace Laba2.Windows
             DrawingPanel.Invalidate();
         }
 
-        private void FunctionBox_SelectedIndexChanged(object sender, EventArgs e)
+       
+        private void AddFunctionButton_Click(object sender, EventArgs e)
         {
-            int choice = FunctionBox.SelectedIndex;
-            if (choice == 0)
-            {
-                double a = 2;
-                double b = 5;
-                function = new LinearFunction(a, b);
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Линейная функция");              
-            }
-            else if (choice == 1)
-            {
-                function = new CubicFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Кубическая функция");
-            }
-            else if (choice == 2)
-            {
-                function = new QuadraticFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Квадратичная функция");
-            }
-            else if (choice == 3)
-            {
-                function = new SinusFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Функция синуса");
-            }
-            else if (choice == 4)
-            {
-                function = new TangentFunction();
-                _chartDrawer.SetFunction(function);
-                label1.Text = ("Функция тангенса");
-            }
+            _createFormulaForm = new CreateFormulaForm();
+            CreateFormulaForm form = new CreateFormulaForm();
+            form.ShowDialog();
+            CustomFunction customFormula = new CustomFunction(form.FormulaExpression);
+
         }
 
-        private void AddFunctionButton_Click(object sender, EventArgs e, CreateFormulaForm createFormulaForm)
+        private void FunctionsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _createFormulaForm = createFormulaForm;
-            CreateFormulaForm form = new CreateFormulaForm();
-            form.Show();
-            
+            var selectedFunction = (IFunction)FunctionsComboBox.SelectedItem;
+            _chartDrawer.SetFunction(selectedFunction);
+        }
     }
 }
 

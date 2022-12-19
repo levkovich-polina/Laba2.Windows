@@ -1,4 +1,5 @@
 ﻿using NFun;
+using NFun.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +11,21 @@ namespace Laba2.Windows
     class CustomFunction : IFunction
     {
         private string _function;
-
+        private FunnyRuntime _runtime;
       
         public CustomFunction(String function)
         {
             _function = function;
-            var runtime = Funny.Hardcore.Build("y = 2*x+1");
+            _runtime = Funny.Hardcore.Build(_function);
         }
         public string Name => _function;
 
         public double Calc(double x)
         {
-
+            _runtime["x"].Value = x;
+            _runtime.Run();
+            var result = _runtime["y"].Value;
+            return (double)result;
         }
     }
 }

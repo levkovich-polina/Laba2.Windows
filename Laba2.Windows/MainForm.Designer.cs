@@ -29,18 +29,17 @@
         private void InitializeComponent()
         {
             this.GroupBox = new System.Windows.Forms.GroupBox();
-            this.FunctionBox = new System.Windows.Forms.ComboBox();
+            this.AddFunctionButton = new System.Windows.Forms.Button();
+            this.FunctionsComboBox = new System.Windows.Forms.ComboBox();
             this.ChoiceComboBox = new System.Windows.Forms.ComboBox();
             this.GraphColorButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
-            this.RandomFunctionButton = new System.Windows.Forms.Button();
             this.ScaleLabel = new System.Windows.Forms.Label();
             this.GraphicColor = new System.Windows.Forms.ColorDialog();
             this.BackgroundColor = new System.Windows.Forms.ColorDialog();
             this.DrawingPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.GradientColor = new System.Windows.Forms.ColorDialog();
-            this.AddFunctionButton = new System.Windows.Forms.Button();
             this.GroupBox.SuspendLayout();
             this.DrawingPanel.SuspendLayout();
             this.SuspendLayout();
@@ -51,11 +50,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox.BackColor = System.Drawing.Color.LightCyan;
             this.GroupBox.Controls.Add(this.AddFunctionButton);
-            this.GroupBox.Controls.Add(this.FunctionBox);
+            this.GroupBox.Controls.Add(this.FunctionsComboBox);
             this.GroupBox.Controls.Add(this.ChoiceComboBox);
             this.GroupBox.Controls.Add(this.GraphColorButton);
             this.GroupBox.Controls.Add(this.SaveButton);
-            this.GroupBox.Controls.Add(this.RandomFunctionButton);
             this.GroupBox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.GroupBox.Location = new System.Drawing.Point(550, 0);
             this.GroupBox.Name = "GroupBox";
@@ -63,20 +61,31 @@
             this.GroupBox.TabIndex = 0;
             this.GroupBox.TabStop = false;
             // 
-            // FunctionBox
+            // AddFunctionButton
             // 
-            this.FunctionBox.FormattingEnabled = true;
-            this.FunctionBox.Items.AddRange(new object[] {
+            this.AddFunctionButton.Location = new System.Drawing.Point(36, 246);
+            this.AddFunctionButton.Name = "AddFunctionButton";
+            this.AddFunctionButton.Size = new System.Drawing.Size(164, 29);
+            this.AddFunctionButton.TabIndex = 6;
+            this.AddFunctionButton.Text = "add function";
+            this.AddFunctionButton.UseVisualStyleBackColor = true;
+            this.AddFunctionButton.Click += new System.EventHandler(this.AddFunctionButton_Click);
+            // 
+            // FunctionsComboBox
+            // 
+            this.FunctionsComboBox.DisplayMember = "Name";
+            this.FunctionsComboBox.FormattingEnabled = true;
+            this.FunctionsComboBox.Items.AddRange(new object[] {
             "Linear Function",
             "Cubic Function",
             "Quadratic Funcion ",
             "Sinus Function",
             "Tangen Function"});
-            this.FunctionBox.Location = new System.Drawing.Point(31, 61);
-            this.FunctionBox.Name = "FunctionBox";
-            this.FunctionBox.Size = new System.Drawing.Size(169, 28);
-            this.FunctionBox.TabIndex = 5;
-            this.FunctionBox.SelectedIndexChanged += new System.EventHandler(this.FunctionBox_SelectedIndexChanged);
+            this.FunctionsComboBox.Location = new System.Drawing.Point(31, 61);
+            this.FunctionsComboBox.Name = "FunctionsComboBox";
+            this.FunctionsComboBox.Size = new System.Drawing.Size(169, 28);
+            this.FunctionsComboBox.TabIndex = 5;
+            this.FunctionsComboBox.SelectedIndexChanged += new System.EventHandler(this.FunctionsComboBox_SelectedIndexChanged);
             // 
             // ChoiceComboBox
             // 
@@ -112,16 +121,6 @@
             this.SaveButton.Text = "save";
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
-            // 
-            // RandomFunctionButton
-            // 
-            this.RandomFunctionButton.Location = new System.Drawing.Point(31, 296);
-            this.RandomFunctionButton.Name = "RandomFunctionButton";
-            this.RandomFunctionButton.Size = new System.Drawing.Size(169, 28);
-            this.RandomFunctionButton.TabIndex = 0;
-            this.RandomFunctionButton.Text = "random function";
-            this.RandomFunctionButton.UseVisualStyleBackColor = true;
-            this.RandomFunctionButton.Click += new System.EventHandler(this.RandomFunctionButton_Click);
             // 
             // ScaleLabel
             // 
@@ -159,16 +158,6 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
             // 
-            // AddFunctionButton
-            // 
-            this.AddFunctionButton.Location = new System.Drawing.Point(36, 246);
-            this.AddFunctionButton.Name = "AddFunctionButton";
-            this.AddFunctionButton.Size = new System.Drawing.Size(164, 29);
-            this.AddFunctionButton.TabIndex = 6;
-            this.AddFunctionButton.Text = "add function";
-            this.AddFunctionButton.UseVisualStyleBackColor = true;
-            this.AddFunctionButton.Click += new System.EventHandler(this.AddFunctionButton_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -190,7 +179,6 @@
 
         private GroupBox GroupBox;
         private Button SaveButton;
-        private Button RandomFunctionButton;
         private Button GraphColorButton;
         private ColorDialog GraphicColor;
         private ColorDialog BackgroundColor;
@@ -199,7 +187,7 @@
         private ColorDialog GradientColor;
         private Label ScaleLabel;
         private Label label1;
-        private ComboBox FunctionBox;
+        private ComboBox FunctionsComboBox;
         private Button AddFunctionButton;
     }
 }
