@@ -28,6 +28,11 @@ namespace Laba2.Windows
             {
               MessageBox.Show("You can't add an empty line! Enter a function", "Error", MessageBoxButtons.OK);                
             }
+            else
+            {
+                Close();
+            }
+          
         }
     }
 }

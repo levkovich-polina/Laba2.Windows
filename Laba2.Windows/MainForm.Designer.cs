@@ -75,12 +75,6 @@
             // 
             this.FunctionsComboBox.DisplayMember = "Name";
             this.FunctionsComboBox.FormattingEnabled = true;
-            this.FunctionsComboBox.Items.AddRange(new object[] {
-            "Linear Function",
-            "Cubic Function",
-            "Quadratic Funcion ",
-            "Sinus Function",
-            "Tangen Function"});
             this.FunctionsComboBox.Location = new System.Drawing.Point(31, 61);
             this.FunctionsComboBox.Name = "FunctionsComboBox";
             this.FunctionsComboBox.Size = new System.Drawing.Size(169, 28);

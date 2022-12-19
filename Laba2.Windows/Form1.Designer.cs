@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.FormulaTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.AddButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -40,15 +39,6 @@
             this.FormulaTextBox.Size = new System.Drawing.Size(194, 27);
             this.FormulaTextBox.TabIndex = 0;
             this.FormulaTextBox.TextChanged += new System.EventHandler(this.FormulaTextBox_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(128, 83);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "y = ";
             // 
             // AddButton
             // 
@@ -66,7 +56,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(516, 243);
             this.Controls.Add(this.AddButton);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.FormulaTextBox);
             this.Name = "CreateFormulaForm";
             this.Text = "CreateFormulaForm";
@@ -78,7 +67,6 @@
         #endregion
 
         private TextBox FormulaTextBox;
-        private Label label1;
         private Button AddButton;
     }
 }

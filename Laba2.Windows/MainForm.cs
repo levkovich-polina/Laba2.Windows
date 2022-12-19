@@ -7,7 +7,8 @@ namespace Laba2.Windows
     {
         IFunction function;
         public readonly ChartDrawer _chartDrawer;
-
+        private Point? _previousMouseLocation;
+        private CreateFormulaForm _createFormulaForm;
         public MainForm()
         {
             InitializeComponent();
@@ -73,8 +74,7 @@ namespace Laba2.Windows
                 ScaleLabel.Text = null;
             }
         }
-        private Point? _previousMouseLocation;
-        private CreateFormulaForm _createFormulaForm;
+   
 
         private void CoordAxes_MouseDown(object sender, MouseEventArgs e)
         {
@@ -180,17 +180,18 @@ namespace Laba2.Windows
        
         private void AddFunctionButton_Click(object sender, EventArgs e)
         {
-            _createFormulaForm = new CreateFormulaForm();
+
             CreateFormulaForm form = new CreateFormulaForm();
             form.ShowDialog();
             CustomFunction customFormula = new CustomFunction(form.FormulaExpression);
-
+            FunctionsComboBox.Items.Add(customFormula);
         }
 
         private void FunctionsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectedFunction = (IFunction)FunctionsComboBox.SelectedItem;
             _chartDrawer.SetFunction(selectedFunction);
+            
         }
     }
 }

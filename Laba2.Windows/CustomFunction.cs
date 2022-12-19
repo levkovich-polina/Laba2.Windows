@@ -16,7 +16,7 @@ namespace Laba2.Windows
         public CustomFunction(String function)
         {
             _function = function;
-            _runtime = Funny.Hardcore.Build(_function);
+            _runtime = Funny.Hardcore.Build($"y:real = {function}");
         }
         public string Name => _function;
 
