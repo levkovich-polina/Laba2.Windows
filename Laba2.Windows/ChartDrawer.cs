@@ -16,7 +16,7 @@ namespace Laba2.Windows
         private readonly Panel _panel;
         private Color _graphicsColor;
         private IBackgroundDrawer _backgroundDrawer;
-
+        public event Action FunctionDrawingFailed;
         public ChartDrawer(Panel panel)
         {
             _panel = panel;
@@ -42,11 +42,21 @@ namespace Laba2.Windows
             DrawYAxis(e.Graphics);
             //Центр координат
             e.Graphics.FillEllipse(Brushes.Red, -2, -2, 4, 4);
+            
+             if (_function != null)
+             {
+                try
+                {
+                    DrawGraphics(graphic);
+                }
+                catch
+                {
+                    _function = null;
+                    FunctionDrawingFailed?.Invoke();
+                }
+             }
+         
            
-            if (_function != null)
-            {
-                DrawGraphics(graphic);
-            }
 
         }
         private void DrawBackground(Graphics graphics)
@@ -161,39 +171,43 @@ namespace Laba2.Windows
             _function = function;
             _panel.Invalidate();
         }
+       
         private void DrawGraphics(Graphics graphic)
         {
-            Pen graphicsPen = new Pen(_graphicsColor);
-            Pen graphicsPen1 = new Pen(Color.Red);
-            int pxMax = _panel.Size.Width / 2 - _pShiftX;
-            int pxMin = pxMax - _panel.ClientSize.Width;
-            int pyMax = _panel.Size.Height / 2 - _pShiftY;
-            int pyMin = pyMax - _panel.ClientSize.Height;
-            double fxMax = pxMax / PixelCountOnAxle / Zoom;
-            double fxMin = pxMin / PixelCountOnAxle / Zoom;
-            var step = ((fxMax - fxMin) / _panel.Size.Width) / 100;
+             Pen graphicsPen = new Pen(_graphicsColor);
+                Pen graphicsPen1 = new Pen(Color.Red);
+                int pxMax = _panel.Size.Width / 2 - _pShiftX;
+                int pxMin = pxMax - _panel.ClientSize.Width;
+                int pyMax = _panel.Size.Height / 2 - _pShiftY;
+                int pyMin = pyMax - _panel.ClientSize.Height;
+                double fxMax = pxMax / PixelCountOnAxle / Zoom;
+                double fxMin = pxMin / PixelCountOnAxle / Zoom;
+                var step = ((fxMax - fxMin) / _panel.Size.Width) / 100;
 
-            for (double fx = fxMin; fx < fxMax; fx += step)
-            {
-                double fx1 = fx;
-                double fx2 = fx + step;
-                double fy1 = _function.Calc(fx1);
-                double fy2 = _function.Calc(fx2);
-                double px1 = Zoom * PixelCountOnAxle * fx1;
-                double py1 = Zoom * -PixelCountOnAxle * fy1;
-                double px2 = Zoom * PixelCountOnAxle * fx2;
-                double py2 = Zoom * -PixelCountOnAxle * fy2;
-                if ((py1 > pyMin && py2 > pyMin) || (py1 < pyMax && py2 < pyMax))
+                for (double fx = fxMin; fx < fxMax; fx += step)
                 {
-                    Point point1 = new Point((int)px1, (int)py1);
-                    Point point2 = new Point((int)px2, (int)py2);
-                    graphic.DrawLine(graphicsPen, point1, point2);
-                    if(py1>0 && py2>0)
+                    double fx1 = fx;
+                    double fx2 = fx + step;
+                    double fy1 = _function.Calc(fx1);
+                    double fy2 = _function.Calc(fx2);
+                    double px1 = Zoom * PixelCountOnAxle * fx1;
+                    double py1 = Zoom * -PixelCountOnAxle * fy1;
+                    double px2 = Zoom * PixelCountOnAxle * fx2;
+                    double py2 = Zoom * -PixelCountOnAxle * fy2;
+                    if ((py1 > pyMin && py2 > pyMin) || (py1 < pyMax && py2 < pyMax))
                     {
-                        graphic.DrawLine(graphicsPen1, point1, point2);
+                        Point point1 = new Point((int)px1, (int)py1);
+                        Point point2 = new Point((int)px2, (int)py2);
+                        graphic.DrawLine(graphicsPen, point1, point2);
+                        if (py1 > 0 && py2 > 0)
+                        {
+                            graphic.DrawLine(graphicsPen1, point1, point2);
+                        }
                     }
                 }
-            }
+          
+            
+          
         }
         public void SetGraphicsColor(Color color)
         {

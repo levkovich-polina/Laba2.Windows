@@ -17,14 +17,21 @@ namespace Laba2.Windows
             FunctionsComboBox.Items.Add(new CubicFunction());
             FunctionsComboBox.Items.Add(new TangentFunction());
             FunctionsComboBox.Items.Add(new QuadraticFunction());
-
+         
             _chartDrawer = new ChartDrawer(DrawingPanel);
+            _chartDrawer.FunctionDrawingFailed += _chartDrawer_FunctionDrawingFailed;
             _chartDrawer.SetBackgroundDrawer(new SolidDrawer(Color.White));
             _chartDrawer.SetGraphicsColor(Color.Green);
             DrawingPanel.MouseWheel += new MouseEventHandler(CoordAxes_MouseWheel);
             typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                null, DrawingPanel, new object[] { true }); ;  // Double buffer for graphic
         }
+
+        private void _chartDrawer_FunctionDrawingFailed()
+        {
+            MessageBox.Show("An error occurred while calculating the function value");
+        }
+
         private void SaveButton_Click(object sender, EventArgs e)
         {
             int width = DrawingPanel.ClientSize.Width;

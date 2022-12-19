@@ -12,6 +12,7 @@ namespace Laba2.Windows
 {
     public partial class CreateFormulaForm : Form
     {
+       
         public CreateFormulaForm()
         {
             InitializeComponent();
@@ -19,7 +20,6 @@ namespace Laba2.Windows
         public string FormulaExpression => FormulaTextBox.Text;
         private void FormulaTextBox_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void AddButton_Click(object sender, EventArgs e)
